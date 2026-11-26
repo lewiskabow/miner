@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Revision Cards: OCR CS &amp; AQA Science</title>
+<style>
+:root{--bg:#f3f2ee;--sf:#fff;--tx:#1b1b19;--mu:#6b6a64;--bd:#e0ded6;--ac:#3b5bdb;--ac2:#7048e8;--act:#fff;--ok:#1f8a4c;--bad:#c63a3a;--sh:0 6px 24px rgba(30,30,60,.09);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141416;--sf:#202024;--tx:#eeede8;--mu:#a2a1ab;--bd:#35353b;--ac:#8aa4ff;--ac2:#b197fc;--act:#111;--ok:#4cc27f;--bad:#ef6b6b;--sh:0 6px 24px rgba(0,0,0,.4);color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#141416;--sf:#202024;--tx:#eeede8;--mu:#a2a1ab;--bd:#35353b;--ac:#8aa4ff;--ac2:#b197fc;--act:#111;--ok:#4cc27f;--bad:#ef6b6b;--sh:0 6px 24px rgba(0,0,0,.4);color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:680px;margin:0 auto;padding:18px 16px 48px}
+header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+h1{font-size:22px;margin:0;background:linear-gradient(90deg,var(--ac),var(--ac2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.ico{width:40px;height:40px;border-radius:50%;border:1px solid var(--bd);background:var(--sf);color:var(--tx);font-size:18px;cursor:pointer}
+.tabs{display:flex;gap:4px;padding:4px;background:var(--sf);border:1px solid var(--bd);border-radius:14px;margin-bottom:14px}
+.tab{flex:1;padding:9px 4px;background:none;border:0;border-radius:10px;color:var(--mu);font:inherit;font-weight:600;cursor:pointer}
+.tab.on{background:linear-gradient(135deg,var(--ac),var(--ac2));color:var(--act)}
+button{font:inherit;cursor:pointer;touch-action:manipulation;position:relative;z-index:1;-webkit-tap-highlight-color:transparent}
+.chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:8px;margin-bottom:6px;scrollbar-width:thin}
+.chip{flex:none;padding:5px 12px;border-radius:99px;border:1px solid var(--bd);background:var(--sf);color:var(--mu);font-size:13px;font-weight:600}
+.chip.on{background:var(--ac);border-color:var(--ac);color:var(--act)}
+.btn{padding:11px 16px;border-radius:12px;border:1px solid var(--bd);background:var(--sf);color:var(--tx);font-weight:600;transition:transform .1s}
+.btn:active{transform:scale(.97)}
+.btn.p{background:linear-gradient(135deg,var(--ac),var(--ac2));color:var(--act);border:0}
+.btn.ok{background:var(--ok);color:#fff;border-color:var(--ok)}
+.btn.sm{padding:7px 12px;font-size:14px;font-weight:500}
+.btn.on{border-color:var(--ac);color:var(--ac)}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.row .btn{flex:1;min-width:120px}
+.stat{color:var(--mu);font-size:14px;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:6px}
+.bar{height:8px;background:var(--bd);border-radius:4px;margin-bottom:14px;overflow:hidden}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--ac),var(--ac2));transition:width .3s}
+.scene{animation:in .25s ease}
+@keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.card3d{position:relative;height:270px;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.card3d .back{display:none}.card3d.fl .front{display:none}.card3d.fl .back{display:flex}.card3d .face{animation:in .2s ease}
+.face{position:absolute;inset:0;background:var(--sf);border:1px solid var(--bd);border-radius:20px;box-shadow:var(--sh);padding:26px 22px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;overflow:auto}
+.back{border-top:4px solid var(--ac2)}.front{border-top:4px solid var(--ac)}
+.face small{color:var(--mu);text-transform:uppercase;letter-spacing:.1em;font-size:11px;margin-bottom:12px}
+.t{font-size:26px;font-weight:700}.d{font-size:19px}
+.hint{text-align:center;color:var(--mu);font-size:12px;margin-top:10px}
+.q{background:var(--sf);border:1px solid var(--bd);border-radius:18px;padding:20px;box-shadow:var(--sh);animation:in .25s ease}
+.opt{display:flex;gap:10px;width:100%;text-align:left;margin-top:10px;padding:12px 14px;border-radius:12px;border:1px solid var(--bd);background:var(--bg);color:var(--tx)}
+.opt b{color:var(--mu);font-weight:600}
+.opt:not(:disabled):hover{border-color:var(--ac)}
+.opt.c{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 18%,var(--sf))}
+.opt.w{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 18%,var(--sf))}
+.panel{background:var(--sf);border:1px solid var(--bd);border-radius:18px;padding:20px;box-shadow:var(--sh);margin-bottom:12px}
+.big{text-align:center;padding:26px 10px}.big h2{margin:0 0 6px}
+.ring{width:130px;height:130px;border-radius:50%;margin:6px auto 12px;display:grid;place-items:center}
+.ring span{width:98px;height:98px;border-radius:50%;background:var(--sf);display:grid;place-items:center;font-size:26px;font-weight:700}
+.pr{margin:10px 0}.pr div{display:flex;justify-content:space-between;font-size:14px;margin-bottom:3px}
+.pr .bar{margin:0;height:7px}
+.miss{font-size:14px;text-align:left;border-top:1px solid var(--bd);padding:8px 0}.miss span{color:var(--mu)}
+.snav{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;padding:6px max(10px,calc((100% - 680px)/2 + 16px));background:var(--sf);border-bottom:1px solid var(--bd);box-shadow:var(--sh)}
+.sn{display:flex;flex-direction:column;align-items:center;gap:1px;padding:8px 2px;border:0;border-radius:12px;background:none;color:var(--mu);min-width:0}
+.sn span{font-size:20px;line-height:1.1}.sn b{font-size:11px;font-weight:600;white-space:nowrap}.sn i{font-size:9px;font-style:normal;opacity:.75}
+.sn.on{background:linear-gradient(135deg,var(--ac),var(--ac2));color:var(--act)}
+.seg{display:flex;gap:4px;padding:4px;background:var(--sf);border:1px solid var(--bd);border-radius:12px;margin-bottom:10px}.seg button{flex:1;padding:7px 4px;border:0;border-radius:9px;background:none;color:var(--mu);font-size:13px;font-weight:600}.seg button.on{background:var(--ac);color:var(--act)}
+.kp{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:8px}.kp button{padding:11px 0;border-radius:10px;border:1px solid var(--bd);background:var(--bg);color:var(--tx);font-size:16px}.kp .eq{background:var(--ac);color:var(--act);border:0}
+.inp{width:100%;padding:11px 12px;border-radius:10px;border:1px solid var(--bd);background:var(--bg);color:var(--tx);font:inherit}
+.steps{font-size:14px;color:var(--mu);border-top:1px solid var(--bd);padding-top:8px;margin-top:8px}details summary{cursor:pointer;font-weight:600}
+.ok-t{color:var(--ok);font-weight:600}.bad-t{color:var(--bad);font-weight:600}
+</style></head><body><nav id="subs" class="snav" aria-label="Subjects"></nav><main>
+<header><h1>🧠 Revision Cards</h1><button class="ico" id="th" title="Toggle theme">🌓</button></header>
+<div class="tabs"><button class="tab on" data-t="f">Flash cards</button><button class="tab" data-t="q">Quiz</button><button class="tab" data-t="c">Calculate</button><button class="tab" data-t="p">Progress</button></div>
+<div id="course" class="seg"></div><div id="chips" class="chips"></div>
+<div id="app"></div>
+</main>
+<script>
+const C=[
+["Abstraction","Removing unnecessary information"],
+["Decomposition","Breaking down problems into smaller, more manageable parts"],
+["Algorithm","A set of instructions to perform an action or solve a problem"],
+["Computational thinking","A logical, step-by-step approach to problem solving"],
+["Refining algorithms","Making algorithms more efficient by debugging, increasing reliability and reducing processes taken"],
+["Pseudo code","Simple syntax that lays out the logic of code in a language-independent way"],
+["Flowchart","A diagram that visually represents the logic of an algorithm"],
+["Syntax error","Code does not run at all because the computer cannot interpret it"],
+["Logic error","Code runs but produces an unexpected or incorrect result"],
+["Run-time error","Code cannot handle extreme conditions, e.g. an impossible calculation"],
+["Trace table","Shows how variables change as a program runs; used for debugging"],
+["Linear search","Checks each element in order; the list does not need to be sorted"],
+["Binary search","Finds the middle of a sorted list and removes the half that cannot hold the target (divide and conquer)"],
+["Bubble sort","Adjacent values are swapped if they are in the wrong order"],
+["Merge sort","Data is split into single items, sorted and rejoined (divide and conquer)"],
+["Insertion sort","Takes one value at a time and inserts it into the correct place in a sorted list"],
+["Bit","Smallest unit a computer stores: a 1 or 0"],
+["Nibble","4 bits; stores 0 to 15; used for converting to hexadecimal"],
+["Byte","8 bits; one keyboard character is usually 1 byte"],
+["Binary","Base 2; only 1 and 0 (on and off)"],
+["Denary","Decimal; base 10; the number system used by humans"],
+["Hexadecimal","Base 16 (0-9 then A-F); each digit represents a nibble"],
+["Modulus","The remainder after division"],
+["Quotient","Division rounded down to an integer"],
+["Left binary shift","Each digit moves left, multiplying by 2"],
+["Right binary shift","Each digit moves right, dividing by 2"],
+["Overflow error","A binary result exceeds the maximum capacity of the allocated storage"],
+["Register","Small piece of memory inside the processor holding an instruction, data or address"],
+["Cache","Small, very fast memory in or close to the processor for recently used data"],
+["CPU","Central Processing Unit: carries out most tasks and coordinates other parts"],
+["Control unit (CU)","Sends signals that direct and coordinate the processor"],
+["PC (Program counter)","Holds the address of the next instruction"],
+["MAR","Memory Address Register: holds the address of the current instruction or data"],
+["MDR","Memory Data Register: holds data fetched from memory"],
+["ALU","Arithmetic/Logic Unit: performs calculations and logic operations"],
+["ACC (Accumulator)","Stores the results of ALU calculations"],
+["CIR","Current Instruction Register: holds the instruction being processed"],
+["FDE cycle","Fetch, Decode, Execute: repeated billions of times by the CPU"],
+["Address bus","Carries the address of the data to be fetched or stored"],
+["Data bus","Carries data between the CPU and main memory"],
+["Control bus","Carries control signals from the CPU to memory"],
+["CPU performance factors","Cache size, number of cores and clock speed"],
+["Variable","A data location that can change while the program runs"],
+["Constant","A data location that stays the same while the program runs"],
+["Casting","Converting data from one type to another"],
+["Sequencing","Code executed in the order it is written"],
+["Selection","Instructions executed only if a condition is met"],
+["Iteration","Repeating instructions: count controlled or condition controlled"],
+["Pixel","A single picture element, a dot of colour in an image"],
+["Colour depth","Number of bits used to represent one pixel"],
+["Resolution","Number of pixels in a given area of an image"],
+["Metadata","Data about data, e.g. image height, width and colour depth"],
+["Sampling","Measuring sound waves at regular intervals to record them digitally"],
+["Sample rate","How many samples are taken per second"],
+["Bit depth","Number of bits used to represent each sound sample"],
+["Substring","A sequence of characters within a string"],
+["ASCII","American Standard Code for Information Interchange: 7 bits per English character"],
+["Unicode","Character set covering every language and emoji (up to 32 bits)"],
+["File handler","Variable that stores the external file so the program can work on it"],
+["Cursor","Tracks the current position within a file when reading or writing"],
+["LAN","Local Area Network: small geographical area, owned by the organisation"],
+["WAN","Wide Area Network: large area, equipment often owned by telecoms suppliers"],
+["Node","Any device connected to a network"],
+["Switch","Intelligent device that sends data only to the intended node"],
+["Hub","Unintelligent device that sends data to all nodes, causing collisions"],
+["Bandwidth","Amount of data that can be sent in a given time, in bits per second"],
+["Latency","The delay between data being sent and received"],
+["NIC","Network Interface Card: converts node data into signals for the network"],
+["Router","Connects a LAN to the internet and sends data between networks"],
+["Peer to peer network","All computers have the same status; suits small, low-traffic networks"],
+["Client-server network","A server provides services to client machines"],
+["Bus topology","Single cable, data travels both ways, so frequent collisions"],
+["Ring topology","Single cable, data travels one way, no collisions"],
+["Mesh topology","Every node connected to every other; resilient but expensive"],
+["Star topology","Every node connects to a central switch or hub"],
+["URL","Uniform Resource Locator: the web address of a website"],
+["DNS","Domain Name System: finds the IP address that matches a URL"],
+["ISP","Internet Service Provider: company that provides your internet connection"],
+["IP address","Unique number identifying a device on a network"],
+["MAC address","12-digit hexadecimal address hard coded into a NIC; does not change"],
+["IPv4","32 bits, four groups of 0 to 255"],
+["IPv6","128 bits, eight groups of four hex digits"],
+["Packet switching","Data packets are sent along whichever routes are available"],
+["Sequence number (packet)","Lets packets be reassembled in order when they arrive at different times"],
+["Checksum","Calculation and answer in a packet used to detect corruption"],
+["TCP","Splits data into packets and reassembles them at the destination"],
+["HTTP","Protocol web browsers use to access web servers"],
+["HTTPS","HTTP with all data encrypted"],
+["FTP","File Transfer Protocol: access files on a server"],
+["POP","Emails are downloaded and removed from the server"],
+["IMAP","Emails are downloaded but kept on the server; usable from many devices"],
+["SMTP","Protocol for sending email between mail servers"],
+["Encryption","Scrambling plain text into cipher text using a key so intercepted data is unreadable"],
+["Copper cable","Twisted copper pairs carrying electrical signals; cheap but prone to interference"],
+["Fibre optic cable","Glass fibres carrying light signals; fastest, no interference, more expensive"],
+["Array","Static data structure storing multiple items of the same type under one name"],
+["Database","Stores data in a logical manner"],
+["Record","A row in a table: all the data about one entity"],
+["Field","A column in a table: one piece of information about an entity"],
+["SQL","Structured Query Language: creates, updates, deletes and queries databases"],
+["Primary storage","Volatile, faster, smaller and costs more per unit of storage"],
+["Secondary storage","Non-volatile, larger, slower and cheaper per unit of storage"],
+["RAM","Volatile memory holding data and instructions currently in use"],
+["ROM","Non-volatile memory that can only be read; holds boot information"],
+["Virtual memory","Secondary storage used when RAM is full"],
+["Magnetic storage","Stores data by switching the polarity of areas (hard disk, tape)"],
+["Optical storage","Pits burnt into a reflective disc and read by a laser (CD, DVD, Blu-ray)"],
+["Solid state storage","Circuitry traps electrons to store data (SSD, SD card)"],
+["NAS","Network Attached Storage: a server providing storage space to nodes"],
+["Cost per GB","The way to fairly compare the cost of storage"],
+["Penetration testing","Authorised experts try to hack the system to reveal weaknesses"],
+["Virus","Program that replicates by hiding in files and can cause harm"],
+["Worm","Replicates continuously, using up system resources"],
+["Trojan","Seemingly innocent program that does harm in the background"],
+["Spyware","Spies on the user and sends information back"],
+["Ransomware","Locks the computer and demands money to unlock it"],
+["Phishing","Tries to obtain sensitive information through emails or messages"],
+["Pharming","Changes the IP address in DNS to send you to a fake website"],
+["Rootkit","Tools giving someone else administrator-level access to your computer"],
+["Denial of Service","Floods a web server with requests so it slows or crashes"],
+["SQL injection","Entering SQL into an input to read or change data; prevented by sanitisation"],
+["Firewall","Monitors data through ports and only allows supported ports"],
+["Input validation","Checks that entered data meets criteria"],
+["Input sanitisation","Removes unwanted characters from entered data"],
+["Presence check","Makes sure data has been entered"],
+["Range check","Number must fall within a set range"],
+["Length check","Input must contain a certain number of characters"],
+["Black box testing","Tests only inputs and outputs, not how the code works"],
+["White box testing","Tests the algorithms and internal logic"],
+["Alpha testing","Programmers act as users to test after black/white box testing"],
+["Beta testing","Wider release to real users under realistic conditions"],
+["Operating system","Manages hardware and software resources and provides a user interface"],
+["Kernel","Heart of the OS: handles the lowest-level hardware operations"],
+["Driver","Software that lets the OS communicate with hardware"],
+["WIMP","Windows, Icons, Menus, Pointers"],
+["Utility software","System software that maintains, secures and optimises the computer"],
+["Defragmentation","Puts a file's data into contiguous sectors; only for hard drives"],
+["Lossy compression","Permanently removes unneeded data, e.g. MP3"],
+["Lossless compression","Reduces size with algorithms and is rebuilt on extraction, e.g. zip"],
+["Full backup","A copy of all data on the system"],
+["Incremental backup","Only saves files that changed since the last backup"],
+["Compiler","Translates all source code at once into a standalone executable"],
+["Interpreter","Translates and runs code line by line"],
+["Assembly language","Low-level language using mnemonics for sets of binary code"],
+["High level language","Close to English; easier to read and write"],
+["Library","Prebuilt, already tested code"],
+["Subroutine","A block of code that performs a task when called"],
+["Procedure","Subroutine that does not return a value"],
+["Function","Subroutine that returns a value to the caller"],
+["Logic gate","Building block of CPU circuitry performing a logical operation"],
+["Truth table","Shows all possible inputs to a gate and the results"],
+["Stakeholder","A person or group affected by an issue"],
+["Data Protection Act 2018","Data must be fair, lawful, accurate, secure and kept no longer than needed"],
+["Computer Misuse Act 1990","Illegal to gain unauthorised access, modify data or supply malware"],
+["Copyright, Designs and Patents Act 1988","Illegal to copy or share others' intellectual property"],
+["Open source licence","Free, with editable code, but often less support and testing"],
+["Proprietary licence","Paid, closed source, usually well supported and tested"],
+["Cloud storage","Data stored on a remote server and accessed through the internet"]
+];
+const $=s=>document.querySelector(s);
+const shuf=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const esc=s=>String(s).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+
+const SUBS=[["CS","💻 Computer Science (OCR)"],["Biology","🧬 Biology (AQA)"],["Chemistry","⚗️ Chemistry (AQA)"],["Physics","⚛️ Physics (AQA)"],["Geography","🌍 Geography (AQA)"]];
+const SN={CS:"Computer Science",Biology:"Biology",Chemistry:"Chemistry",Physics:"Physics",Geography:"Geography"};
+const FIX={
+"Abstraction":"Removing unnecessary detail so you can focus on the important features of a problem",
+"Decomposition":"Breaking a complex problem down into smaller sub-problems that are easier to solve",
+"Algorithm":"A step-by-step set of instructions used to solve a problem or complete a task",
+"Computational thinking":"Using abstraction, decomposition and algorithmic thinking to solve problems",
+"Pseudo code":"A structured, language-independent way of writing an algorithm that looks like code but has no strict syntax",
+"Flowchart":"A diagram using standard symbols (terminator, process, decision, input/output) to show the steps of an algorithm",
+"Syntax error":"A mistake that breaks the rules of the programming language, so the code cannot be translated or run",
+"Logic error":"The program runs but gives an incorrect or unexpected result because of a mistake in the logic",
+"Trace table":"A table used to follow the values of variables line by line to test an algorithm and find logic errors",
+"Binary search":"Compares the target with the middle item of a sorted list and discards the half it cannot be in, repeating until found",
+"Linear search":"Checks each item in turn from the start until the target is found; the list does not need to be sorted",
+"Bit":"A binary digit: a single 1 or 0, the smallest unit of data",
+"Quotient":"The whole-number result of an integer division (DIV)",
+"Modulus":"The remainder left after an integer division (MOD)",
+"Cache":"Small, very fast memory in the CPU that stores frequently used instructions and data to reduce waiting for RAM",
+"CPU":"Processes data and instructions by repeatedly carrying out the fetch-decode-execute cycle",
+"Control unit (CU)":"Part of the CPU that decodes instructions and coordinates the other components using control signals",
+"Resolution":"The number of pixels in an image (width × height); more pixels means more detail and a bigger file",
+"Metadata":"Extra data stored with a file describing it, e.g. image width, height and colour depth, or sound sample rate and bit depth",
+"Unicode":"Character set using 16 or more bits per character so it can represent every language and emoji",
+"ASCII":"7-bit character set giving 128 characters, mainly English letters, digits and symbols",
+"Compiler":"Translates all the source code into machine code in one go, producing an executable file; errors reported afterwards",
+"Interpreter":"Translates and executes source code one line at a time; stops at the first error",
+"Lossy compression":"Reduces file size by permanently removing data that cannot be restored (e.g. JPEG, MP3)",
+"Lossless compression":"Reduces file size without losing any data; the original can be rebuilt exactly",
+"Virus":"Malware that attaches to a file and copies itself when the file is run",
+"Worm":"Self-replicating malware that spreads across a network without needing a host file or user action",
+"Spyware":"Software that secretly records user activity (e.g. key presses) and sends it to a third party",
+"Phishing":"Fake emails or messages that trick people into revealing sensitive data, often via a link to a fake site",
+"Firewall":"Monitors and filters incoming and outgoing network traffic, blocking anything that breaks its security rules",
+"Primary storage":"Directly accessed by the CPU (e.g. RAM, ROM, cache); smaller and faster",
+"Secondary storage":"Not directly accessed by the CPU; non-volatile, larger capacity, used for long-term storage",
+"RAM":"Volatile memory holding the programs, data and OS currently in use",
+"ROM":"Non-volatile memory that holds the bootstrap (start-up) instructions",
+"Virtual memory":"Part of secondary storage used as extra RAM when RAM is full; slower than RAM",
+"DNS":"Domain Name System: translates a domain name or URL into the IP address of the web server",
+"Packet switching":"Data is split into packets that can take different routes to the destination and are reassembled in order",
+"IPv4":"32-bit address written as four numbers from 0 to 255 separated by dots",
+"Star topology":"Every device connects to a central switch or hub; if one cable fails only that device is affected",
+"Switch":"Sends data only to the intended device using MAC addresses, reducing collisions and traffic"
+};
+const CX=[
+["Data",[["Kilobyte (KB)","1000 bytes (OCR uses 1000, not 1024)"],["Megabyte (MB)","1000 kilobytes"],["Gigabyte (GB)","1000 megabytes"],["Terabyte (TB)","1000 gigabytes"],["Hexadecimal use","Shorter and easier for humans to read and remember than binary"]]],
+["CPU",[["Von Neumann architecture","Data and instructions are stored together in main memory and processed in sequence by the CPU"],["Clock speed","Number of FDE cycles the CPU can carry out per second, measured in hertz"],["Core","A processing unit within the CPU that can run its own instructions; more cores allow more tasks at once"],["Embedded system","A computer built into a larger device to do one dedicated function, e.g. a washing machine"],["AND gate","Output is 1 only if both inputs are 1"],["OR gate","Output is 1 if at least one input is 1"],["NOT gate","Output is the opposite of the input"]]],
+["Programming",[["Count-controlled loop","Iteration that repeats a set number of times (FOR)"],["Condition-controlled loop","Iteration that repeats until or while a condition is met (WHILE / DO UNTIL)"],["Local variable","Can only be used in the subroutine or structure where it is declared"],["Global variable","Can be used anywhere in the program"],["Boolean","Data type with only two values: True or False"],["Authentication","Checking that a user is who they claim to be, e.g. with a password"],["Defensive design","Planning for misuse by validating inputs, authenticating users and making code maintainable"]]],
+["Testing",[["Normal test data","Valid data the program should accept and process correctly"],["Boundary test data","Data on the edge of what is allowed (the highest and lowest valid values, and just outside)"],["Invalid test data","Data of the right type but outside the allowed range, which should be rejected"],["Erroneous test data","Data of the wrong type that the program should reject"],["Iterative testing","Testing repeatedly during development as each part is built"],["Final (terminal) testing","Testing the complete program at the end of development"]]],
+["Security",[["Social engineering","Manipulating people into giving away confidential information, e.g. phishing, blagging, shouldering"],["Shouldering","Watching someone enter their PIN or password over their shoulder"],["Blagging","Inventing a scenario to trick someone into handing over information"],["Brute force attack","Trying every possible password combination until the correct one is found"],["Anti-malware software","Scans for, detects and removes malicious software"]]],
+["Networks",[["Ethernet","Standard for wired connections in a LAN"],["Protocol layering","Splitting network communication into layers (application, transport, internet, link) that each do a specific job"]]],
+["Law & ethics",[["Digital divide","The gap between people who have access to technology and those who do not"],["Environmental impact of technology","Energy use, e-waste and the extraction of rare materials"]]]
+];
+const BIO=[
+["P1 Cell biology",[["Eukaryotic cell","Has a nucleus and other membrane-bound organelles, e.g. animal and plant cells"],["Prokaryotic cell","Smaller cell with no nucleus; DNA is a single loop and may have plasmids"],["Mitochondria","Site of aerobic respiration, releasing energy"],["Ribosome","Site of protein synthesis"],["Chloroplast","Contains chlorophyll; site of photosynthesis"],["Mitosis","Cell division making two genetically identical diploid cells for growth and repair"],["Stem cell","Undifferentiated cell that can divide and become specialised"],["Diffusion","Net movement of particles from a higher to a lower concentration"],["Osmosis","Diffusion of water through a partially permeable membrane from a dilute to a more concentrated solution"],["Active transport","Movement of substances from a lower to a higher concentration using energy from respiration"]]],
+["P1 Organisation",[["Enzyme","Biological catalyst that speeds up reactions; specific because of the shape of its active site"],["Denaturation","The active site changes shape (e.g. high temperature, wrong pH) so the substrate no longer fits"],["Amylase","Breaks down starch into sugars"],["Protease","Breaks down proteins into amino acids"],["Lipase","Breaks down lipids into fatty acids and glycerol"],["Bile","Made in the liver; neutralises stomach acid and emulsifies fat"],["Xylem","Transports water and minerals from roots to leaves"],["Phloem","Transports dissolved sugars around the plant (translocation)"],["Transpiration","Evaporation of water from leaves, drawing water up the xylem"]]],
+["P1 Infection & response",[["Pathogen","A microorganism that causes disease"],["Antibody","Protein made by white blood cells that is specific to one antigen"],["Vaccination","Dead or inactive pathogen injected to make antibodies, giving immunity"],["Antibiotic","Kills bacteria; does not work against viruses"],["Phagocytosis","White blood cells engulfing and digesting pathogens"]]],
+["P1 Bioenergetics",[["Photosynthesis","Carbon dioxide + water → glucose + oxygen; endothermic, using light energy"],["Aerobic respiration","Glucose + oxygen → carbon dioxide + water, releasing energy"],["Anaerobic respiration (muscles)","Glucose → lactic acid, releasing less energy"],["Limiting factor","Factor in shortest supply that restricts photosynthesis rate, e.g. light, CO₂ or temperature"]]],
+["P2 Homeostasis",[["Homeostasis","Regulation of internal conditions to keep them optimum for enzymes and cells"],["Insulin","Hormone from the pancreas that lowers blood glucose"],["Glucagon","Hormone from the pancreas that raises blood glucose"],["Reflex arc","Receptor → sensory neurone → relay neurone → motor neurone → effector"],["ADH","Hormone controlling how much water is reabsorbed by the kidneys"]]],
+["P2 Inheritance",[["Gene","A section of DNA that codes for a protein"],["Allele","A different version of the same gene"],["Genotype","The combination of alleles a person has"],["Phenotype","The characteristics that are expressed"],["Meiosis","Cell division making four genetically different haploid gametes"],["Natural selection","Individuals best adapted survive, reproduce and pass on their alleles"],["Selective breeding","Humans choosing parents with desired characteristics to breed"]]],
+["P2 Ecology",[["Biodiversity","The variety of living organisms in an ecosystem"],["Producer","Organism that makes its own food by photosynthesis, at the start of a food chain"],["Quadrat","Square frame used to sample population size of plants in an area"],["Eutrophication","Fertiliser runoff causes algal bloom, blocking light, so plants die and decomposers use up oxygen"]]]
+];
+const CHEM=[
+["P1 Atomic structure",[["Atom","Smallest part of an element: a nucleus of protons and neutrons surrounded by electrons"],["Isotope","Atoms of the same element with the same number of protons but different numbers of neutrons"],["Ion","A charged particle formed when an atom gains or loses electrons"],["Group 1 (alkali metals)","Reactivity increases down the group; react with water to form a hydroxide and hydrogen"],["Group 7 (halogens)","Reactivity decreases down the group; a more reactive halogen displaces a less reactive one"],["Group 0 (noble gases)","Unreactive because they have full outer shells"]]],
+["P1 Bonding",[["Ionic bonding","Transfer of electrons from metal to non-metal, giving ions held by strong electrostatic attraction"],["Covalent bonding","Sharing of a pair of electrons between non-metal atoms"],["Metallic bonding","Positive ions in a lattice surrounded by delocalised electrons"],["Simple molecular substance","Strong covalent bonds within molecules but weak intermolecular forces, so low melting point"],["Giant covalent structure","Many atoms joined by covalent bonds, giving high melting points, e.g. diamond"]]],
+["P1 Quantitative chemistry",[["Mole","6.02 × 10²³ particles (the Avogadro constant)"],["Relative formula mass (Mr)","Sum of the relative atomic masses of all the atoms in the formula"],["Limiting reactant","The reactant that is used up first and so limits the amount of product"],["Concentration","Mass of solute divided by volume of solution (g/dm³)"],["Conservation of mass","No atoms are lost or made in a reaction, so total mass of reactants equals total mass of products"]]],
+["P1 Chemical changes",[["Oxidation","Gain of oxygen or loss of electrons"],["Reduction","Loss of oxygen or gain of electrons"],["Neutralisation","Acid + base → salt + water; H⁺ + OH⁻ → H₂O"],["Electrolysis","Breaking down an ionic compound using electricity; positive ions go to the cathode"],["Strong acid","Ionises completely in water"]]],
+["P1 Energy changes",[["Exothermic reaction","Transfers energy to the surroundings, so temperature rises"],["Endothermic reaction","Takes in energy from the surroundings, so temperature falls"],["Activation energy","The minimum energy particles need when colliding to react"]]],
+["P2 Rates & equilibrium",[["Catalyst","Speeds up a reaction by providing an alternative pathway with lower activation energy; not used up"],["Collision theory","Reactions need particles to collide with enough energy and the correct orientation"],["Dynamic equilibrium","Forward and reverse reactions happen at the same rate in a closed system"]]],
+["P2 Organic chemistry",[["Fractional distillation","Separates crude oil into fractions by boiling point"],["Alkane","Saturated hydrocarbon with only single bonds, formula CnH2n+2"],["Alkene","Unsaturated hydrocarbon with a C=C double bond, CnH2n; decolourises bromine water"],["Cracking","Breaking long hydrocarbons into shorter, more useful ones using heat and a catalyst"]]],
+["P2 Analysis & atmosphere",[["Rf value","Distance moved by the substance divided by distance moved by the solvent"],["Greenhouse gas","Gas such as carbon dioxide, methane or water vapour that absorbs and re-emits heat radiation"],["Potable water","Water that is safe to drink"]]]
+];
+const PHY=[
+["P1 Energy",[["Kinetic energy","Energy of a moving object: ½ × mass × speed²"],["Gravitational potential energy","Energy due to height: mass × gravitational field strength × height"],["Specific heat capacity","Energy needed to raise the temperature of 1 kg of a substance by 1 °C"],["Power","Rate of energy transfer; power = energy ÷ time (watts)"],["Efficiency","Useful energy output divided by total energy input"],["Conservation of energy","Energy cannot be created or destroyed, only transferred or dissipated"]]],
+["P1 Electricity",[["Current","Rate of flow of charge: I = Q ÷ t (amperes)"],["Potential difference","Energy transferred per unit of charge, measured in volts"],["Resistance","Opposition to current: V = I × R (ohms)"],["Series circuit","One loop; current is the same everywhere and potential differences add up"],["Parallel circuit","Branches; potential difference is the same across each, and currents add up"],["National Grid","Step-up transformers raise voltage to reduce current and energy lost in cables"]]],
+["P1 Particles",[["Density","Mass per unit volume: ρ = m ÷ V"],["Specific latent heat","Energy needed to change the state of 1 kg of a substance with no temperature change"],["Internal energy","Total kinetic and potential energy of all the particles in a system"]]],
+["P1 Atomic structure",[["Alpha radiation","2 protons and 2 neutrons; strongly ionising; stopped by paper"],["Beta radiation","Fast-moving electron; stopped by thin aluminium"],["Gamma radiation","Electromagnetic wave; weakly ionising; stopped by thick lead"],["Half-life","Time for the number of undecayed nuclei, or the count rate, to halve"],["Nuclear fission","A large nucleus splits into two smaller ones, releasing energy"],["Nuclear fusion","Two small nuclei join to form a larger one, releasing energy"],["Background radiation","Low-level radiation always around us, e.g. from rocks and cosmic rays"]]],
+["P2 Forces",[["Vector","A quantity with both magnitude and direction, e.g. force or velocity"],["Scalar","A quantity with magnitude only, e.g. speed or mass"],["Newton’s first law","An object stays at rest or moves at constant velocity unless a resultant force acts"],["Newton’s second law","Resultant force = mass × acceleration (F = ma)"],["Newton’s third law","Every force has an equal and opposite force on a different object"],["Weight","Force of gravity on a mass: W = m × g"],["Moment","Turning effect of a force: force × perpendicular distance from the pivot"],["Stopping distance","Thinking distance plus braking distance"],["Momentum","Mass × velocity (kg m/s); conserved in a closed system"],["Hooke’s law","Extension is directly proportional to force, F = k × e, up to the limit of proportionality"]]],
+["P2 Waves",[["Transverse wave","Oscillations are perpendicular to the direction of energy transfer, e.g. light"],["Longitudinal wave","Oscillations are parallel to the direction of energy transfer, e.g. sound"],["Wave speed equation","Wave speed = frequency × wavelength (v = fλ)"],["Electromagnetic spectrum","Radio, microwave, infrared, visible, ultraviolet, X-ray, gamma (increasing frequency)"],["Refraction","Change in direction of a wave as it changes speed when entering a different medium"]]],
+["P2 Magnetism & space",[["Motor effect","A current-carrying wire in a magnetic field experiences a force"],["Red-shift","Light from distant galaxies shifted to longer wavelengths, showing they are moving away"],["Big Bang theory","The universe began from a very small, hot, dense point and has been expanding since"]]]
+];
+const GEO=[
+["P1 Natural hazards",[["Tectonic plate","A section of the Earth’s crust that moves slowly on the mantle"],["Destructive plate margin","Plates move together and the denser oceanic plate is subducted, causing earthquakes and volcanoes"],["Constructive plate margin","Plates move apart and magma rises to form new crust"],["Conservative plate margin","Plates slide past each other, causing earthquakes but no volcanoes"],["Primary effects","The immediate impacts of a hazard, e.g. buildings collapsing"],["Secondary effects","Later impacts caused by the primary effects, e.g. fires or disease"],["Immediate responses","Actions straight after a hazard, e.g. rescue and emergency aid"],["Tropical storm","Intense low-pressure storm forming over oceans warmer than 27 °C"],["Mitigation (climate change)","Reducing the causes of climate change, e.g. cutting greenhouse gas emissions"],["Adaptation (climate change)","Adjusting to the effects of climate change, e.g. building flood defences"]]],
+["P1 Physical landscapes in the UK",[["Hydraulic action","Force of water and air compressing into cracks, breaking the rock apart"],["Abrasion","Rock fragments carried by waves or a river scrape and wear away the surface"],["Attrition","Rocks carried by water hit each other and become smaller and rounder"],["Longshore drift","Movement of sediment along a coast by waves hitting the beach at an angle"],["Headland","Resistant rock that sticks out into the sea as softer rock erodes around it"],["Wave-cut platform","Flat rocky area left at the base of a cliff as it retreats"],["Hard engineering","Man-made structures to control natural processes, e.g. sea walls and groynes"],["Soft engineering","Working with natural processes, e.g. beach nourishment and managed retreat"],["Meander","A bend in a river caused by erosion on the outside and deposition on the inside"],["Ox-bow lake","A cut-off meander loop left when the river takes a shorter path"],["Floodplain","Flat land either side of a river that floods"],["Hydrograph lag time","The time between peak rainfall and peak river discharge"],["Freeze-thaw weathering","Water freezes in cracks, expands and breaks the rock"],["Corrie","Armchair-shaped hollow in a mountain formed by glacial erosion"]]],
+["P1 The living world",[["Ecosystem","A community of plants and animals interacting with their environment"],["Nutrient cycle","Movement of nutrients between soil, plants and decomposing litter"],["Deforestation","The clearing of forest, e.g. for logging, farming or mining"],["Desertification","Land turning into desert through overgrazing, deforestation and drought"],["Sustainable management","Using resources so they are available for future generations"]]],
+["P2 Urban issues & challenges",[["Urbanisation","An increase in the proportion of people living in towns and cities"],["Megacity","A city with a population of over 10 million people"],["Rural-urban migration","Movement of people from the countryside to cities"],["Natural increase","Birth rate higher than death rate"],["Informal settlement","Housing built without legal permission or services, e.g. squatter settlements"],["Brownfield site","Land previously built on that is available for redevelopment"],["Urban regeneration","Investment to improve a run-down area"]]],
+["P2 The changing economic world",[["Development","Progress in a country’s economy, living standards and quality of life"],["HDI","Human Development Index: combines life expectancy, education and income"],["Demographic transition model","Shows how birth rate, death rate and population change as a country develops"],["Globalisation","Increasing connections between countries through trade, travel and communication"],["Transnational corporation","A company that operates in more than one country"],["Foreign direct investment","Money invested by a foreign company in a country’s industries"],["Multiplier effect","Investment creates jobs and wealth that lead to further growth"],["Fairtrade","Farmers are guaranteed a fair price for their goods"],["Microfinance","Small loans to people too poor to use normal banks"],["Deindustrialisation","Decline of manufacturing industry in a country"]]],
+["P2 Resource management",[["Food security","Having reliable access to enough affordable, nutritious food"],["Water stress","Demand for water is greater than the available supply"],["Carbon footprint","The total greenhouse gases produced by a person, product or organisation"],["Energy mix","The proportion of different energy sources a country uses"],["Renewable energy","Energy that will not run out, e.g. wind and solar"],["Irrigation","Artificially supplying water to crops"],["Appropriate technology","Simple, affordable technology that suits local people’s needs and skills"]]]
+];
+const QB={
+Geography:[
+["P1 Natural hazards","Which plate margin forms when an oceanic plate is subducted beneath a continental plate?","Destructive","Constructive","Conservative","Passive"],
+["P1 Natural hazards","Which is a primary effect of an earthquake?","Buildings collapsing","Disease from a lack of clean water","Loss of jobs","Higher insurance costs"],
+["P1 Natural hazards","Above what sea surface temperature do tropical storms form?","27 °C","17 °C","37 °C","7 °C"],
+["P1 Natural hazards","Which is an example of climate change mitigation?","Reducing greenhouse gas emissions","Building flood defences","Changing crop types","Raising house floors"],
+["P1 Physical landscapes in the UK","Which erosion process involves rock fragments scraping against a cliff?","Abrasion","Attrition","Hydraulic action","Solution"],
+["P1 Physical landscapes in the UK","What is left at the base of a cliff as it retreats?","Wave-cut platform","Spit","Bar","Levee"],
+["P1 Physical landscapes in the UK","What is lag time on a storm hydrograph?","Time between peak rainfall and peak discharge","Time that rainfall lasts","Discharge before the rain","Time for the river to flood"],
+["P1 Physical landscapes in the UK","Which is hard engineering on a coast?","Sea walls","Beach nourishment","Managed retreat","Dune regeneration"],
+["P1 Physical landscapes in the UK","How does an ox-bow lake form?","A meander neck is cut through and the loop is sealed off by deposition","A waterfall erodes a plunge pool","A glacier melts in a hollow","A river floods its floodplain"],
+["P1 Physical landscapes in the UK","Which weathering process involves water freezing in cracks?","Freeze-thaw","Chemical weathering","Biological weathering","Carbonation"],
+["P1 The living world","Which is a consequence of rainforest deforestation?","Soil erosion","Increased biodiversity","More nutrient cycling","Lower temperatures"],
+["P1 The living world","How are cacti adapted to a hot desert?","Thick, waxy stems that store water","Large thin leaves","Drip tips","Shallow roots only"],
+["P2 Urban issues & challenges","What is rural-urban migration?","Movement of people from the countryside to cities","Movement from cities to the countryside","Movement between countries","Movement within a city"],
+["P2 Urban issues & challenges","Which is a push factor from rural areas?","Lack of jobs and services","Better schools","Higher wages","Access to hospitals"],
+["P2 Urban issues & challenges","What is a brownfield site?","Land previously built on that can be redeveloped","Undeveloped countryside","Protected green belt","Land used only for farming"],
+["P2 The changing economic world","What does HDI measure?","Life expectancy, education and income","GDP only","Population growth","Number of exports"],
+["P2 The changing economic world","What is the multiplier effect?","Investment creates jobs and wealth that lead to further growth","Population doubling in size","Loss of jobs after a factory closes","Rising prices of imports"],
+["P2 The changing economic world","What is a transnational corporation?","A company that operates in more than one country","A company owned by the government","A charity working abroad","A small local business"],
+["P2 Resource management","What is food security?","Reliable access to enough affordable, nutritious food","Growing food only for export","Having surplus food","Protecting crops from pests"],
+["P2 Resource management","Which is a renewable energy source?","Wind","Coal","Natural gas","Oil"],
+["P2 Resource management","What is water stress?","Demand for water is greater than supply","Too much water in an area","Polluted water","Water frozen as ice"]],
+Biology:[
+["P1 Cell biology","Which part of an animal cell controls the cell’s activities?","Nucleus","Ribosome","Mitochondrion","Cell membrane"],
+["P1 Cell biology","Which process moves water across a partially permeable membrane?","Osmosis","Diffusion","Active transport","Translocation"],
+["P1 Cell biology","Which type of cell division produces two genetically identical cells?","Mitosis","Meiosis","Fertilisation","Differentiation"],
+["P1 Cell biology","Why do root hair cells use active transport?","To take in mineral ions against a concentration gradient","To absorb water by osmosis","To release oxygen","To make glucose"],
+["P1 Organisation","What is the function of bile?","Emulsifies fat and neutralises stomach acid","Digests protein","Digests starch","Absorbs water"],
+["P1 Organisation","Which enzyme breaks down starch?","Amylase","Protease","Lipase","Catalase"],
+["P1 Organisation","Which tissue carries dissolved sugars through a plant?","Phloem","Xylem","Epidermis","Palisade mesophyll"],
+["P1 Organisation","What happens to an enzyme at a very high temperature?","The active site changes shape and it denatures","It works faster","It is used up","It becomes a different enzyme"],
+["P1 Infection & response","What does a vaccine contain?","Dead or inactive pathogens","Antibiotics","Antibodies from another person","Live, active bacteria"],
+["P1 Infection & response","Why are antibiotics not used to treat colds?","Colds are caused by viruses, which antibiotics cannot kill","Colds are caused by fungi","Antibiotics make viruses mutate","Colds are not caused by pathogens"],
+["P1 Bioenergetics","Which is the word equation for photosynthesis?","Carbon dioxide + water → glucose + oxygen","Glucose + oxygen → carbon dioxide + water","Glucose → lactic acid","Oxygen + water → glucose + carbon dioxide"],
+["P1 Bioenergetics","What is produced by anaerobic respiration in muscles?","Lactic acid","Ethanol","Carbon dioxide and water","Glucose"],
+["P1 Bioenergetics","Which is NOT a limiting factor for photosynthesis?","Oxygen concentration","Light intensity","Carbon dioxide concentration","Temperature"],
+["P2 Homeostasis","Which hormone lowers blood glucose concentration?","Insulin","Glucagon","Adrenaline","ADH"],
+["P2 Homeostasis","What is the correct order of a reflex arc?","Receptor → sensory neurone → relay neurone → motor neurone → effector","Receptor → motor neurone → relay neurone → sensory neurone → effector","Effector → sensory neurone → relay neurone → motor neurone → receptor","Receptor → relay neurone → sensory neurone → effector → motor neurone"],
+["P2 Homeostasis","Which organ releases insulin?","Pancreas","Pituitary gland","Thyroid","Liver"],
+["P2 Inheritance","What does meiosis produce?","Four genetically different haploid gametes","Two identical diploid cells","Four identical haploid cells","Two different diploid cells"],
+["P2 Inheritance","A person has the alleles Bb. What is their genotype described as?","Heterozygous","Homozygous dominant","Homozygous recessive","Haploid"],
+["P2 Inheritance","Two heterozygous parents (Aa × Aa) have a child. What is the probability of aa?","25%","50%","75%","0%"],
+["P2 Ecology","What are producers?","Organisms that make glucose by photosynthesis","Organisms that eat plants","Organisms that break down dead material","Organisms at the top of the food chain"],
+["P2 Ecology","What causes eutrophication?","Fertiliser running off into water","Overfishing","Acid rain","Deforestation"]],
+Chemistry:[
+["P1 Atomic structure","Isotopes of an element have different numbers of which particle?","Neutrons","Protons","Electrons","Outer electrons"],
+["P1 Atomic structure","What is the electronic structure of sodium (atomic number 11)?","2,8,1","2,8,2","2,8,8","2,2,7"],
+["P1 Atomic structure","Why are noble gases unreactive?","They have full outer shells","They have one outer electron","They are all liquids","They have no protons"],
+["P1 Atomic structure","What is the trend in reactivity down Group 1?","It increases","It decreases","It stays the same","It increases then decreases"],
+["P1 Bonding","Why do ionic compounds conduct electricity when molten?","The ions are free to move","The electrons are free to move","Atoms share electrons","They contain delocalised electrons"],
+["P1 Bonding","Why can graphite conduct electricity?","It has delocalised electrons","It has free ions","It has strong covalent bonds","Its layers are joined by ionic bonds"],
+["P1 Bonding","Why do simple molecular substances have low boiling points?","Weak intermolecular forces need little energy to overcome","Covalent bonds break easily","They contain ions","They contain delocalised electrons"],
+["P1 Quantitative chemistry","What is the relative formula mass of CO₂? (C = 12, O = 16)","44","28","60","32"],
+["P1 Quantitative chemistry","How many particles are in one mole of a substance?","6.02 × 10²³","6.02 × 10²²","3.01 × 10²³","1.2 × 10²⁴"],
+["P1 Quantitative chemistry","10 g of solute is dissolved in 2 dm³ of solution. What is the concentration?","5 g/dm³","20 g/dm³","0.2 g/dm³","12 g/dm³"],
+["P1 Chemical changes","In copper oxide + carbon → copper + carbon dioxide, what is reduced?","Copper oxide","Carbon","Carbon dioxide","Copper"],
+["P1 Chemical changes","Which electrode do positive ions move to during electrolysis?","Cathode","Anode","Both electrodes","Neither electrode"],
+["P1 Chemical changes","What does an acid + a metal carbonate produce?","Salt + water + carbon dioxide","Salt + hydrogen","Salt + water","Salt + oxygen"],
+["P1 Energy changes","What does the term activation energy mean?","The minimum energy particles need to react","The energy released in a reaction","The total energy of the products","The energy of the surroundings"],
+["P1 Energy changes","What happens to the temperature of the surroundings in an exothermic reaction?","It increases","It decreases","It stays the same","It increases then decreases"],
+["P2 Rates & equilibrium","Why does a catalyst increase the rate of reaction?","It provides an alternative pathway with a lower activation energy","It increases the temperature","It is used up in the reaction","It increases the concentration"],
+["P2 Rates & equilibrium","Why does a larger surface area increase the rate?","More frequent collisions","Particles have more energy","Activation energy is lower","There are more particles"],
+["P2 Rates & equilibrium","What is true at dynamic equilibrium?","Forward and reverse reactions happen at the same rate","The reaction has stopped","Reactants have all been used up","Only the forward reaction occurs"],
+["P2 Organic chemistry","What is the general formula of the alkanes?","CₙH₂ₙ₊₂","CₙH₂ₙ","CₙHₙ","CₙH₂ₙ₋₂"],
+["P2 Organic chemistry","What is the test for an alkene?","It decolourises bromine water","It turns limewater milky","It relights a glowing splint","It bleaches damp litmus paper"],
+["P2 Organic chemistry","How does fractional distillation separate crude oil?","By boiling point","By density","By colour","By reactivity"],
+["P2 Analysis & atmosphere","How is an Rf value calculated?","Distance moved by substance ÷ distance moved by solvent","Distance moved by solvent ÷ distance moved by substance","Distance moved by substance × distance moved by solvent","Distance moved by substance − distance moved by solvent"],
+["P2 Analysis & atmosphere","What is the test for carbon dioxide?","It turns limewater milky","It relights a glowing splint","It makes a squeaky pop with a lit splint","It turns damp litmus paper red"],
+["P2 Analysis & atmosphere","Which is a greenhouse gas?","Methane","Nitrogen","Argon","Oxygen"]],
+Physics:[
+["P1 Energy","What is the unit of power?","Watt","Joule","Newton","Pascal"],
+["P1 Energy","What is the kinetic energy of a 2 kg object moving at 3 m/s?","9 J","6 J","18 J","3 J"],
+["P1 Energy","What is the gravitational potential energy of 5 kg raised 2 m? (g = 10 N/kg)","100 J","10 J","50 J","25 J"],
+["P1 Energy","A device has 40 J useful output from 100 J input. What is its efficiency?","40%","60%","2.5%","4%"],
+["P1 Electricity","What is the resistance of a component with 12 V across it and 3 A through it?","4 Ω","36 Ω","0.25 Ω","15 Ω"],
+["P1 Electricity","What is true about current in a series circuit?","It is the same everywhere","It splits between branches","It is highest at the cell","It is used up by each component"],
+["P1 Electricity","How much charge flows when 2 A flows for 10 s?","20 C","5 C","12 C","0.2 C"],
+["P1 Electricity","Why does the National Grid use a high voltage?","It reduces current so less energy is lost as heat","It increases current","It makes cables thicker","It stores more charge"],
+["P1 Particles","What is the density of an object with mass 200 g and volume 50 cm³?","4 g/cm³","0.25 g/cm³","10 000 g/cm³","150 g/cm³"],
+["P1 Particles","What is specific latent heat?","Energy to change the state of 1 kg with no temperature change","Energy to raise 1 kg by 1 °C","Energy released when a gas cools","Total energy of all particles"],
+["P1 Atomic structure","Which type of radiation is the most penetrating?","Gamma","Alpha","Beta","They are all the same"],
+["P1 Atomic structure","A source has a half-life of 8 minutes. What fraction remains after 24 minutes?","1/8","1/4","1/3","1/6"],
+["P1 Atomic structure","What is an alpha particle made of?","2 protons and 2 neutrons","2 electrons","1 proton","4 protons"],
+["P1 Atomic structure","What happens in nuclear fission?","A large nucleus splits into smaller nuclei","Two small nuclei join together","An electron is emitted","A neutron changes into a proton"],
+["P2 Forces","A 20 N force acts right and a 5 N force acts left. What is the resultant?","15 N right","25 N right","15 N left","100 N"],
+["P2 Forces","What force accelerates a 4 kg mass at 3 m/s²?","12 N","7 N","1.3 N","0.75 N"],
+["P2 Forces","What is the weight of a 5 kg mass? (g = 10 N/kg)","50 N","5 N","0.5 N","15 N"],
+["P2 Forces","Which of these is a vector quantity?","Velocity","Speed","Mass","Time"],
+["P2 Forces","What is stopping distance?","Thinking distance + braking distance","Braking distance − thinking distance","Speed × time","Reaction time × speed"],
+["P2 Waves","A wave has frequency 50 Hz and wavelength 2 m. What is its speed?","100 m/s","25 m/s","52 m/s","0.04 m/s"],
+["P2 Waves","Which electromagnetic wave has the shortest wavelength?","Gamma rays","Radio waves","Infrared","Visible light"],
+["P2 Waves","What type of wave is sound?","Longitudinal","Transverse","Electromagnetic","Stationary"],
+["P2 Magnetism & space","What does red-shift of light from distant galaxies show?","The galaxies are moving away from us","The galaxies are moving towards us","The galaxies are not moving","The galaxies are getting hotter"],
+["P2 Magnetism & space","What does the motor effect describe?","A current-carrying wire in a magnetic field experiences a force","A magnet inducing a current in a coil","Current flowing in a closed circuit","Two magnets repelling"]]
+};
+const LVL={"Mole":"H","Limiting reactant":"H","Concentration":"H","Dynamic equilibrium":"H","Strong acid":"H","Momentum":"H","Moment":"T"};
+const NC={"LAN":"Network basics","WAN":"Network basics","Node":"Network basics","Peer to peer network":"Network basics","Client-server network":"Network basics","Bandwidth":"Network basics","Latency":"Network basics","Switch":"Network hardware","Hub":"Network hardware","Router":"Network hardware","NIC":"Network hardware","Copper cable":"Network hardware","Fibre optic cable":"Network hardware","Bus topology":"Network topologies","Ring topology":"Network topologies","Mesh topology":"Network topologies","Star topology":"Network topologies","TCP":"Network protocols","HTTP":"Network protocols","HTTPS":"Network protocols","FTP":"Network protocols","POP":"Network protocols","IMAP":"Network protocols","SMTP":"Network protocols","Ethernet":"Network protocols","Protocol layering":"Network protocols","URL":"Addressing & packets","DNS":"Addressing & packets","ISP":"Addressing & packets","IP address":"Addressing & packets","MAC address":"Addressing & packets","IPv4":"Addressing & packets","IPv6":"Addressing & packets","Packet switching":"Addressing & packets","Sequence number (packet)":"Addressing & packets","Checksum":"Addressing & packets","Encryption":"Wireless & encryption"};
+const CXN=[
+["Network basics",[["Computer network","Two or more devices connected to share data and resources"],["Internet","A worldwide collection of interconnected networks"],["Server","A computer that provides services or resources to client devices"],["Client","A device that requests services from a server"]]],
+["Network hardware",[["Wireless access point (WAP)","Connects wireless devices to a wired network"],["Transmission media","The cables or wireless signals that carry data across a network"]]],
+["Network topologies",[["Network topology","The way the devices in a network are arranged and connected"]]],
+["Network protocols",[["Protocol","A set of rules that lets devices communicate and agree how data is formatted"],["TCP/IP model","Four layers: application, transport, internet and link"],["Application layer","Where programs such as browsers and email clients use protocols like HTTP, FTP and SMTP"],["Transport layer","Splits data into packets and checks they arrive correctly (TCP)"],["Internet layer","Addresses and routes packets across networks (IP)"],["Link layer","Sends data over the physical connection, e.g. Ethernet"],["Why use layers","Each layer has one job, so layers can be changed independently and devices follow a common standard"]]],
+["Addressing & packets",[["Packet","A small unit of data with a header (addresses and sequence number) and a payload"],["Static IP address","An IP address that does not change"],["Dynamic IP address","An IP address that is assigned temporarily and can change"]]],
+["Wireless & encryption",[["Wi-Fi","Wireless networking standard using radio waves in the 2.4 GHz and 5 GHz bands"],["Bluetooth","Short-range wireless connection between nearby devices"]]]
+];
+const BIOX=[
+["P1 Infection & response",[["Monoclonal antibody","Identical antibodies made by a clone of one cell, targeting a specific antigen","T"],["Culturing microorganisms","Growing bacteria on agar using aseptic technique so the culture is not contaminated","T"]]],
+["P2 Homeostasis",[["Negative feedback","A change triggers a response that reverses it and returns conditions to normal","H"],["Menstrual cycle hormones","FSH matures an egg, oestrogen builds the lining, LH triggers ovulation, progesterone maintains the lining","H"],["Auxin","Plant hormone that makes shoot cells elongate on the shaded side (phototropism)","T"],["Gibberellin","Plant hormone that promotes seed germination and flowering","T"],["Ethene","Plant hormone that controls fruit ripening","T"],["Kidney dialysis","Machine that removes urea and excess ions from the blood of people with kidney failure","T"]]],
+["P2 Inheritance",[["Mutation","A change in the DNA base sequence that can change the protein made","H"],["Tissue culture","Growing new plants from small groups of cells in a growth medium","T"],["Speciation","Formation of a new species when isolated populations can no longer interbreed","T"]]],
+["P2 Ecology",[["Biomass transfer","Only about 10% of biomass passes to the next trophic level; the rest is lost as waste, movement and respiration","H"]]]
+];
+const CHEMX=[
+["P1 Quantitative chemistry",[["Titration","Uses a burette to find the volume of one solution needed to neutralise a measured volume of another","T"],["Percentage yield","Actual yield ÷ theoretical yield × 100","T"],["Atom economy","Relative formula mass of desired product ÷ total Mr of reactants × 100","T"],["Molar volume of a gas","One mole of any gas occupies 24 dm³ at room temperature and pressure","T"]]],
+["P1 Chemical changes",[["Half equation","Shows electrons gained or lost, e.g. Na → Na⁺ + e⁻","H"],["Weak acid","Only partially ionises in water, e.g. ethanoic acid","H"],["Fuel cell","Produces electricity from a fuel and oxygen; a hydrogen fuel cell gives water","T"]]],
+["P2 Rates & equilibrium",[["Le Chatelier’s principle","If a condition of an equilibrium is changed, the system shifts to oppose the change","H"],["Haber process","N₂ + 3H₂ ⇌ 2NH₃ at about 450 °C, 200 atm, with an iron catalyst","T"]]],
+["P2 Organic chemistry",[["Alcohol","Compound containing the –OH group, e.g. ethanol","T"],["Carboxylic acid","Compound containing the –COOH group, e.g. ethanoic acid","T"],["Addition polymerisation","Many alkene monomers join to form a polymer with no other product","T"]]],
+["P2 Analysis & atmosphere",[["Flame test","Metal ions give flame colours: lithium crimson, sodium yellow, potassium lilac, copper green","T"]]]
+];
+const PHYX=[
+["P1 Particles",[["Pressure in fluids","Pressure = force ÷ area; in a liquid it increases with depth and density","T"],["Atmospheric pressure","Caused by air particles colliding with a surface; decreases with altitude","T"],["Upthrust","Upward force on an object in a fluid, equal to the weight of fluid displaced","T"]]],
+["P2 Forces",[["Rate of change of momentum","Force = change in momentum ÷ time","H"],["Gears","Interlocking cogs that transmit a turning effect; a larger gear turns slower with a greater moment","T"]]],
+["P2 Waves",[["Convex lens","Brings parallel rays together at the principal focus","T"],["Black body radiation","Perfect emitter and absorber; hotter bodies emit more and at shorter wavelengths","T"],["Ultrasound","Sound above 20 kHz, used for medical scanning and cleaning","T"],["Seismic waves","P waves are longitudinal and pass through solids and liquids; S waves are transverse and only pass through solids","T"]]],
+["P2 Magnetism & space",[["Fleming’s left-hand rule","Thumb shows force, first finger the field, second finger the current","H"],["Electromagnetic induction","A potential difference is induced when a wire cuts magnetic field lines","T"],["Transformer equation","Vp × Ip = Vs × Is, and Vp ÷ Vs = np ÷ ns","T"]]]
+];
+QB.CS=[
+["Network basics","What does a LAN cover?","A small area such as one building","A whole country","The whole world","Only wireless devices"],
+["Network basics","In which type of network do all computers have equal status?","Peer to peer","Client-server","Mesh","Star"],
+["Network basics","What does a client do in a client-server network?","Requests services from the server","Stores all the data","Routes packets to the internet","Encrypts the cables"],
+["Network hardware","Which device sends data only to the intended device?","Switch","Hub","Cable","Modem"],
+["Network hardware","What does a router do?","Connects networks and directs packets between them","Stores web pages","Converts text to binary","Provides electricity"],
+["Network hardware","Which cable sends data as pulses of light?","Fibre optic","Copper twisted pair","Coaxial","Ethernet patch lead"],
+["Network topologies","Which topology connects every device to a central switch?","Star","Bus","Ring","Mesh"],
+["Network topologies","Which topology is most likely to suffer data collisions?","Bus","Star","Mesh","Ring"],
+["Network topologies","Which topology gives several routes between devices, so is the most resilient?","Mesh","Bus","Star","Ring"],
+["Network protocols","Which protocol sends email between mail servers?","SMTP","POP","IMAP","FTP"],
+["Network protocols","Which email protocol leaves messages on the server so they can be read on several devices?","IMAP","POP","SMTP","HTTP"],
+["Network protocols","Which protocol encrypts web traffic?","HTTPS","HTTP","FTP","SMTP"],
+["Network protocols","In which layer does HTTP operate?","Application","Transport","Internet","Link"],
+["Network protocols","Which protocol is used to upload and download files from a server?","FTP","SMTP","IMAP","TCP"],
+["Addressing & packets","What does DNS do?","Translates domain names into IP addresses","Encrypts data","Splits data into packets","Blocks unauthorised traffic"],
+["Addressing & packets","Which address is hard coded into a network interface card?","MAC address","IPv4 address","IPv6 address","URL"],
+["Addressing & packets","How many bits are in an IPv4 address?","32","16","64","128"],
+["Addressing & packets","Why does each packet have a sequence number?","So the packets can be reassembled in the right order","So they can be encrypted","So the router can block them","So they take the same route"],
+["Wireless & encryption","What does encryption do to data?","Scrambles it into cipher text so it is unreadable if intercepted","Compresses it","Deletes it after sending","Splits it into packets"],
+["Wireless & encryption","Which frequency bands does Wi-Fi use?","2.4 GHz and 5 GHz","1 GHz and 10 GHz","100 MHz and 900 MHz","5 GHz and 60 GHz only"]];
+QB.Biology.push(
+["P2 Homeostasis","What type of control mechanism keeps blood glucose in a narrow range?","Negative feedback","Positive feedback","A reflex arc","Osmosis","H"],
+["P2 Homeostasis","Which hormone triggers ovulation?","LH","FSH","Progesterone","Oestrogen","H"],
+["P2 Inheritance","What is a mutation?","A change in the DNA base sequence","A change in the number of chromosomes only","A type of gamete","A new species","H"],
+["P2 Homeostasis","Which plant hormone controls fruit ripening?","Ethene","Auxin","Gibberellin","Insulin","T"],
+["P1 Infection & response","Why is aseptic technique used when culturing microorganisms?","To prevent contamination by unwanted microbes","To make the bacteria grow faster","To kill all the bacteria","To change the colour of the agar","T"],
+["P1 Infection & response","What do monoclonal antibodies target?","A specific antigen","Any pathogen","All body cells","Only viruses","T"],
+["P2 Inheritance","Which technique grows new plants from a few cells in a growth medium?","Tissue culture","Meiosis","Fertilisation","Natural selection","T"]);
+QB.Chemistry.push(
+["P2 Rates & equilibrium","Pressure is increased on an equilibrium with fewer gas molecules on the right. What happens?","It shifts to the right","It shifts to the left","No change","The reaction stops","H"],
+["P1 Chemical changes","What is a weak acid?","One that only partially ionises in water","One that ionises completely","One with pH 7","One with no hydrogen","H"],
+["P1 Chemical changes","Which half equation shows oxidation?","Na → Na⁺ + e⁻","Na⁺ + e⁻ → Na","Cl₂ + 2e⁻ → 2Cl⁻","Cu²⁺ + 2e⁻ → Cu","H"],
+["P1 Quantitative chemistry","The theoretical yield is 20 g and the actual yield is 15 g. What is the percentage yield?","75%","133%","5%","25%","T"],
+["P1 Quantitative chemistry","What volume do 0.5 mol of a gas occupy at room temperature and pressure?","12 dm³","24 dm³","48 dm³","6 dm³","T"],
+["P2 Organic chemistry","Which functional group do alcohols contain?","–OH","–COOH","C=C","–NH₂","T"],
+["P2 Rates & equilibrium","What are the conditions for the Haber process?","About 450 °C, 200 atm, iron catalyst","25 °C, 1 atm, no catalyst","1000 °C, 1 atm, platinum","450 °C, 1 atm, nickel","T"],
+["P2 Analysis & atmosphere","What colour does lithium give in a flame test?","Crimson","Yellow","Lilac","Green","T"]);
+QB.Physics.push(
+["P2 Forces","Which equation links force and momentum?","Force = change in momentum ÷ time","Force = mass ÷ acceleration","Force = momentum × time","Force = velocity ÷ time","H"],
+["P2 Forces","A 2 kg object moves at 6 m/s. What is its momentum?","12 kg m/s","3 kg m/s","8 kg m/s","36 kg m/s","H"],
+["P2 Magnetism & space","In Fleming’s left-hand rule, what does the thumb show?","The direction of the force","The direction of current","The direction of the field","The voltage","H"],
+["P1 Particles","What does upthrust equal?","The weight of fluid displaced","The weight of the object","The mass of the object","The volume of the object","T"],
+["P1 Particles","A force of 100 N acts on an area of 0.5 m². What is the pressure?","200 Pa","50 Pa","0.005 Pa","100 Pa","T"],
+["P2 Waves","Which seismic waves can travel through the liquid outer core?","P waves","S waves","Both P and S waves","Neither","T"],
+["P2 Waves","What does a convex lens do to parallel rays?","Brings them to a focus","Spreads them out","Reflects them","Absorbs them","T"],
+["P2 Magnetism & space","A transformer has 100 primary turns, 500 secondary turns and 10 V input. What is the output?","50 V","2 V","5000 V","500 V","T"]);
+const rn=(a,b)=>a+Math.floor(Math.random()*(b-a+1)),P=a=>a[rn(0,a.length-1)],f=(x,d=2)=>+(+x).toFixed(d);
+const MR=[["NaCl",58.5],["CaCO₃",100],["H₂O",18],["CO₂",44],["MgO",40],["NaOH",40],["H₂SO₄",98],["HCl",36.5]];
+const G={
+CS:[
+["Image file size","",()=>{const w=P([64,100,128,200,256,400]),h=P([64,100,128,200,256,300]),d=P([1,2,4,8,16,24]),b=w*h*d/8;return[`An image is ${w} × ${h} pixels with a colour depth of ${d} bits. Calculate the file size in kilobytes (1 KB = 1000 bytes).`,f(b/1000,3),"KB",[`Bits = width × height × colour depth = ${w} × ${h} × ${d} = ${w*h*d} bits`,`Bytes = ${w*h*d} ÷ 8 = ${b} bytes`,`KB = ${b} ÷ 1000 = ${f(b/1000,3)} KB`],3]}],
+["Sound file size","",()=>{const r=P([8000,11025,22050,44100]),d=P([8,16,24]),t=P([10,20,30,60,120]),c=P([1,2]),bits=r*d*t*c,mb=bits/8/1e6;return[`A sound clip is recorded at a sample rate of ${r} Hz with a bit depth of ${d} bits for ${t} seconds in ${c===1?"mono":"stereo (2 channels)"}. Calculate the file size in megabytes (1 MB = 1 000 000 bytes).`,f(mb,3),"MB",[`Bits = sample rate × bit depth × seconds${c>1?" × channels":""} = ${r} × ${d} × ${t}${c>1?" × 2":""} = ${bits}`,`Bytes = ${bits} ÷ 8 = ${bits/8}`,`MB = ${bits/8} ÷ 1 000 000 = ${f(mb,3)} MB`],3]}],
+["Text file size","",()=>{const n=P([500,1200,2000,5000,10000]),b=P([8,16]),by=n*b/8;return[`A text file contains ${n} characters, each stored using ${b} bits. Calculate the file size in bytes.`,by,"bytes",[`Bits = ${n} × ${b} = ${n*b}`,`Bytes = ${n*b} ÷ 8 = ${by}`],0]}],
+["Unit conversion","",()=>{const u=P([["GB","MB",1000],["MB","KB",1000],["TB","GB",1000],["KB","bytes",1000],["bytes","bits",8],["MB","GB",.001],["KB","MB",.001]]),dn=u[2]<1,v=dn?P([500,2500,8000]):P([2,5,12,50,250]),a=f(v*u[2],3);return[`Convert ${v} ${u[0]} into ${u[1]}. (1 byte = 8 bits; each larger unit is 1000 times bigger.)`,a,u[1],[dn?`Divide by 1000: ${v} ÷ 1000 = ${a}`:`Multiply by ${u[2]}: ${v} × ${u[2]} = ${a}`],dn?3:0]}],
+["Download time","",()=>{const s=P([20,50,120,500,800]),sp=P([8,10,16,20,40,100]),t=s*8/sp;return[`A ${s} MB file is downloaded over a connection of ${sp} Mbit/s. How many seconds does the download take?`,f(t,1),"s",[`Convert MB to megabits: ${s} × 8 = ${s*8} Mbit`,`Time = size ÷ speed = ${s*8} ÷ ${sp} = ${f(t,1)} s`],1]}],
+["Storage capacity","",()=>{const c=P([16,32,64,128,256]),m=P([4,5,8,10]),n=Math.floor(c*1000/m);return[`A phone has ${c} GB of free storage. Each song is ${m} MB. How many whole songs can be stored? (1 GB = 1000 MB)`,n,"songs",[`MB available = ${c} × 1000 = ${c*1000}`,`Songs = ${c*1000} ÷ ${m} = ${f(c*1000/m,2)}, so ${n} whole songs`],0]}],
+["Binary to denary","",()=>{const n=rn(20,255),b=n.toString(2).padStart(8,"0");return[`Convert the binary number ${b} into denary.`,n,"",[`Place values: 128 64 32 16 8 4 2 1`,`Add the place values where there is a 1 = ${n}`],0]}],
+["Hexadecimal to denary","",()=>{const n=rn(16,255),x=n.toString(16).toUpperCase().padStart(2,"0");return[`Convert the hexadecimal number ${x} into denary.`,n,"",[`First digit × 16 + second digit = ${parseInt(x[0],16)} × 16 + ${parseInt(x[1],16)} = ${n}`],0]}],
+["Binary shift","",()=>{const k=P([1,2,3]),l=P([true,false]),n=l?rn(1,30):rn(1,15)*2**k,r=l?n*2**k:n/2**k,b=x=>x.toString(2).padStart(8,"0");return[`The binary number ${b(n)} (denary ${n}) is shifted ${k} place${k>1?"s":""} to the ${l?"left":"right"}. What is the denary value of the result?`,r,"",[`Each place shifted ${l?"left multiplies":"right divides"} by 2: ${n} ${l?"×":"÷"} ${2**k} = ${r}`],0]}],
+["Denary to binary","",()=>{const n=rn(10,255),b=n.toString(2).padStart(8,"0");return[`Convert the denary number ${n} into 8-bit binary.`,b,"",[`Subtract the place values 128, 64, 32, 16, 8, 4, 2, 1 where they fit: ${n} = ${b}`],0]}]],
+Biology:[
+["Magnification","",()=>{const i=P([20,30,45,60,80]),a=P([5,10,20,40,50]),m=i*1000/a;return[`A cell is ${i} mm long in a photograph. Its actual length is ${a} µm. Calculate the magnification.`,f(m,0),"×",[`Convert to the same units: ${i} mm = ${i*1000} µm`,`Magnification = image size ÷ actual size = ${i*1000} ÷ ${a} = ${f(m,0)}`],0]}],
+["Actual size from magnification","",()=>{const m=P([40,100,400,1000]),i=P([20,36,50,60]),a=i/m*1000;return[`A drawing of a cell is ${i} mm wide with a magnification of ×${m}. Calculate the actual width of the cell in µm.`,f(a,1),"µm",[`Actual size = image size ÷ magnification = ${i} ÷ ${m} = ${f(i/m,4)} mm`,`× 1000 to convert to µm = ${f(a,1)} µm`],1]}],
+["Percentage change in mass","",()=>{const i=P([2,3.5,4,5,6.4]),c=P([-25,-20,-10,10,20,30]),e=f(i*(1+c/100),2);return[`A potato cylinder has a mass of ${i} g. After 24 hours in a solution it has a mass of ${e} g. Calculate the percentage change in mass.`,f((e-i)/i*100,1),"%",[`Change = ${e} − ${i} = ${f(e-i,2)} g`,`% change = change ÷ original × 100 = ${f(e-i,2)} ÷ ${i} × 100 = ${f((e-i)/i*100,1)}%`],1]}],
+["Population size (quadrats)","",()=>{const A=P([100,200,400,1000]),q=P([.25,.5,1]),n=Array.from({length:5},()=>rn(1,12)),s=n.reduce((x,y)=>x+y),m=s/5,t=Math.round(m*A/q);return[`A field has an area of ${A} m². Five ${q} m² quadrats contain ${n.join(", ")} daisies. Estimate the total number of daisies in the field.`,t,"daisies",[`Mean per quadrat = ${s} ÷ 5 = ${f(m,2)}`,`Number of quadrat areas in the field = ${A} ÷ ${q} = ${A/q}`,`Estimate = ${f(m,2)} × ${A/q} = ${t}`],0]}],
+["Surface area to volume ratio","",()=>{const L=P([1,2,3,4,5,6]),sa=6*L*L,v=L**3;return[`A cube has sides of ${L} cm. Calculate its surface area to volume ratio (as a single number, x : 1).`,f(sa/v,2),"",[`Surface area = 6 × ${L}² = ${sa} cm²`,`Volume = ${L}³ = ${v} cm³`,`Ratio = ${sa} ÷ ${v} = ${f(sa/v,2)} : 1`],2]}],
+["Rate of reaction","",()=>{const v=P([12,24,30,48,60]),t=P([20,30,40,60,120]);return[`An enzyme reaction produces ${v} cm³ of oxygen in ${t} seconds. Calculate the mean rate of reaction in cm³/s.`,f(v/t,2),"cm³/s",[`Rate = volume ÷ time = ${v} ÷ ${t} = ${f(v/t,2)} cm³/s`],2]}],
+["Cardiac output","T",()=>{const s=P([60,70,75,80]),hr=P([60,65,72,80,100]);return[`A person has a stroke volume of ${s} cm³ and a heart rate of ${hr} beats per minute. Calculate the cardiac output.`,s*hr,"cm³/min",[`Cardiac output = stroke volume × heart rate = ${s} × ${hr} = ${s*hr} cm³/min`],0]}]],
+Chemistry:[
+["Relative formula mass","",()=>{const c=P([["MgCl₂","Mg = 24, Cl = 35.5","24 + (2 × 35.5)",95],["CaCO₃","Ca = 40, C = 12, O = 16","40 + 12 + (3 × 16)",100],["Mg(OH)₂","Mg = 24, O = 16, H = 1","24 + (2 × 16) + (2 × 1)",58],["Al₂O₃","Al = 27, O = 16","(2 × 27) + (3 × 16)",102],["Na₂CO₃","Na = 23, C = 12, O = 16","(2 × 23) + 12 + (3 × 16)",106],["(NH₄)₂SO₄","N = 14, H = 1, S = 32, O = 16","(2 × 14) + (8 × 1) + 32 + (4 × 16)",132]]);return[`Calculate the relative formula mass (Mr) of ${c[0]}. (${c[1]})`,c[3],"",[`Mr = ${c[2]} = ${c[3]}`],0]}],
+["Relative atomic mass (isotopes)","",()=>{const i=P([[10,11],[35,37],[63,65],[24,26],[79,81]]),a=P([20,25,50,60,75,80]),r=(i[0]*a+i[1]*(100-a))/100;return[`An element has two isotopes: mass ${i[0]} (${a}% abundance) and mass ${i[1]} (${100-a}%). Calculate its relative atomic mass.`,f(r,1),"",[`Ar = (${i[0]} × ${a} + ${i[1]} × ${100-a}) ÷ 100 = ${f(r,2)} ≈ ${f(r,1)}`],1]}],
+["Concentration (g/dm³)","",()=>{const m=P([2,5,10,20,40]),v=P([100,200,250,500]),c=m/(v/1000);return[`${m} g of solute is dissolved in ${v} cm³ of solution. Calculate the concentration in g/dm³.`,f(c,1),"g/dm³",[`Volume in dm³ = ${v} ÷ 1000 = ${v/1000} dm³`,`Concentration = mass ÷ volume = ${m} ÷ ${v/1000} = ${f(c,1)} g/dm³`],1]}],
+["Rf value","",()=>{const s=P([2.4,3.6,4.5,6]),v=P([8,9,10,12]);return[`In chromatography a spot moves ${s} cm and the solvent moves ${v} cm. Calculate the Rf value.`,f(s/v,2),"",[`Rf = distance moved by spot ÷ distance moved by solvent = ${s} ÷ ${v} = ${f(s/v,2)}`],2]}],
+["Mean rate of reaction","",()=>{const q=P([18,24,36,60,90]),t=P([20,30,45,60,90]);return[`${q} cm³ of gas is produced in ${t} seconds. Calculate the mean rate of reaction in cm³/s.`,f(q/t,2),"cm³/s",[`Rate = quantity ÷ time = ${q} ÷ ${t} = ${f(q/t,2)} cm³/s`],2]}],
+["Moles from mass","H",()=>{const s=P(MR),n=P([.1,.2,.25,.5,2,3]),m=f(n*s[1],2);return[`Calculate the number of moles in ${m} g of ${s[0]}. (Mr = ${s[1]})`,n,"mol",[`Moles = mass ÷ Mr = ${m} ÷ ${s[1]} = ${n} mol`],2]}],
+["Mass from moles","H",()=>{const s=P(MR),n=P([.1,.25,.5,2,4]),m=f(n*s[1],2);return[`Calculate the mass of ${n} mol of ${s[0]}. (Mr = ${s[1]})`,m,"g",[`Mass = moles × Mr = ${n} × ${s[1]} = ${m} g`],2]}],
+["Concentration (mol/dm³)","H",()=>{const n=P([.05,.1,.2,.5]),v=P([100,250,500,1000]),c=n/(v/1000);return[`${n} mol of solute is dissolved in ${v} cm³ of solution. Calculate the concentration in mol/dm³.`,f(c,2),"mol/dm³",[`Volume = ${v} ÷ 1000 = ${v/1000} dm³`,`Concentration = moles ÷ volume = ${n} ÷ ${v/1000} = ${f(c,2)} mol/dm³`],2]}],
+["Percentage yield","T",()=>{const t=P([10,20,25,40,50]),p=P([45,60,72,80,85]),a=f(t*p/100,2);return[`A reaction has a theoretical yield of ${t} g. The actual yield is ${a} g. Calculate the percentage yield.`,p,"%",[`% yield = actual ÷ theoretical × 100 = ${a} ÷ ${t} × 100 = ${p}%`],1]}],
+["Atom economy","T",()=>{const r=P([["CaCO₃ → CaO + CO₂ (desired product: CaO)",56,100,"Mr CaCO₃ = 100, Mr CaO = 56"],["2H₂O → 2H₂ + O₂ (desired product: H₂)",4,36,"Mr of 2H₂O = 36, Mr of 2H₂ = 4"],["Fe₂O₃ + 3CO → 2Fe + 3CO₂ (desired product: Fe)",112,244,"Mr reactants = 160 + (3 × 28) = 244, Mr of 2Fe = 112"],["CH₄ + H₂O → CO + 3H₂ (desired product: H₂)",6,34,"Mr reactants = 16 + 18 = 34, Mr of 3H₂ = 6"]]);return[`Calculate the atom economy for the reaction ${r[0]}.`,f(r[1]/r[2]*100,1),"%",[r[3],`Atom economy = Mr of desired product ÷ total Mr of reactants × 100 = ${r[1]} ÷ ${r[2]} × 100 = ${f(r[1]/r[2]*100,1)}%`],1]}],
+["Gas volumes","T",()=>{const n=P([.1,.25,.5,2,3]);return[`What volume does ${n} mol of any gas occupy at room temperature and pressure? (1 mol = 24 dm³)`,f(n*24,1),"dm³",[`Volume = moles × 24 = ${n} × 24 = ${f(n*24,1)} dm³`],1]}],
+["Titration","T",()=>{const v=P([20,22.5,24,25.5]),c=P([.1,.2,.25,.5]),n=f(c*25/1000,5);return[`25.0 cm³ of sodium hydroxide of concentration ${c} mol/dm³ is neutralised by ${v} cm³ of hydrochloric acid. Calculate the concentration of the acid in mol/dm³. (1 : 1 ratio)`,f(25*c/v,3),"mol/dm³",[`Moles NaOH = ${c} × (25.0 ÷ 1000) = ${n} mol`,`Moles HCl = same (1 : 1) = ${n} mol`,`Concentration = moles ÷ volume = ${n} ÷ ${v/1000} = ${f(25*c/v,3)} mol/dm³`],3]}]],
+Physics:[
+["Speed","",()=>{const s=P([100,150,300,1200,3000]),t=P([10,20,25,40,60]);return[`A car travels ${s} m in ${t} s. Calculate its average speed in m/s.`,f(s/t,2),"m/s",[`Speed = distance ÷ time = ${s} ÷ ${t} = ${f(s/t,2)} m/s`],2]}],
+["Acceleration","",()=>{const u=P([0,2,5,10]),v=u+P([8,12,16,20]),t=P([2,4,5,8,10]);return[`A vehicle speeds up from ${u} m/s to ${v} m/s in ${t} s. Calculate its acceleration.`,f((v-u)/t,2),"m/s²",[`a = change in velocity ÷ time = (${v} − ${u}) ÷ ${t} = ${f((v-u)/t,2)} m/s²`],2]}],
+["Force (F = ma)","",()=>{const m=P([2,5,10,20,1200]),a=P([.5,2,3,4,6]);return[`A ${m} kg object accelerates at ${a} m/s². Calculate the resultant force.`,f(m*a,1),"N",[`F = m × a = ${m} × ${a} = ${f(m*a,1)} N`],1]}],
+["Weight","",()=>{const m=P([2,5,12,60,75]),g=P([9.8,10]);return[`Calculate the weight of a ${m} kg mass. (g = ${g} N/kg)`,f(m*g,1),"N",[`W = m × g = ${m} × ${g} = ${f(m*g,1)} N`],1]}],
+["Kinetic energy","",()=>{const m=P([2,5,60,1000]),v=P([3,5,10,20]);return[`Calculate the kinetic energy of a ${m} kg object moving at ${v} m/s.`,f(.5*m*v*v,1),"J",[`KE = ½ × m × v² = 0.5 × ${m} × ${v}² = ${f(.5*m*v*v,1)} J`],1]}],
+["Gravitational potential energy","",()=>{const m=P([2,5,12,60]),h=P([2,5,10,30]),g=P([9.8,10]);return[`Calculate the gravitational potential energy gained by a ${m} kg mass lifted ${h} m. (g = ${g} N/kg)`,f(m*g*h,1),"J",[`GPE = m × g × h = ${m} × ${g} × ${h} = ${f(m*g*h,1)} J`],1]}],
+["Work done and power","",()=>{const F=P([20,50,120,300]),s=P([5,10,20]),t=P([4,5,10,20]);return[`A force of ${F} N moves an object ${s} m in ${t} s. Calculate the power.`,f(F*s/t,1),"W",[`Work done = F × s = ${F} × ${s} = ${F*s} J`,`Power = work ÷ time = ${F*s} ÷ ${t} = ${f(F*s/t,1)} W`],1]}],
+["Efficiency","",()=>{const t=P([100,200,250,500]),p=P([20,30,40,60,75]),u=t*p/100;return[`A motor transfers ${t} J of energy and ${u} J is useful. Calculate the efficiency as a percentage.`,p,"%",[`Efficiency = useful ÷ total × 100 = ${u} ÷ ${t} × 100 = ${p}%`],1]}],
+["Ohm’s law","",()=>{const I=P([.5,1,2,3,5]),Rs=P([4,6,10,12,20]),V=f(I*Rs,1),k=rn(0,2);return k===0?[`A ${Rs} Ω resistor carries a current of ${I} A. Calculate the potential difference across it.`,V,"V",[`V = I × R = ${I} × ${Rs} = ${V} V`],1]:k===1?[`A potential difference of ${V} V is applied across a ${Rs} Ω resistor. Calculate the current.`,I,"A",[`I = V ÷ R = ${V} ÷ ${Rs} = ${I} A`],2]:[`A current of ${I} A flows when ${V} V is applied across a component. Calculate its resistance.`,Rs,"Ω",[`R = V ÷ I = ${V} ÷ ${I} = ${Rs} Ω`],1]}],
+["Electrical power and energy","",()=>{const I=P([2,5,8,13]),t=P([60,120,300,600]);return[`A 230 V kettle draws a current of ${I} A for ${t} s. Calculate the energy transferred.`,230*I*t,"J",[`Power = V × I = 230 × ${I} = ${230*I} W`,`Energy = power × time = ${230*I} × ${t} = ${230*I*t} J`],0]}],
+["Charge flow","",()=>{const I=P([.5,2,3,5]),t=P([10,20,30,60,120]);return[`A current of ${I} A flows for ${t} s. Calculate the charge that flows.`,f(I*t,1),"C",[`Q = I × t = ${I} × ${t} = ${f(I*t,1)} C`],1]}],
+["Density","",()=>{const m=P([120,250,540,810]),v=P([20,50,100,200]);return[`An object has a mass of ${m} g and a volume of ${v} cm³. Calculate its density.`,f(m/v,2),"g/cm³",[`Density = mass ÷ volume = ${m} ÷ ${v} = ${f(m/v,2)} g/cm³`],2]}],
+["Wave speed","",()=>{const fr=P([2,50,200,440,1000]),l=P([.5,.75,1.5,2,3]);return[`A wave has a frequency of ${fr} Hz and a wavelength of ${l} m. Calculate the wave speed.`,f(fr*l,1),"m/s",[`v = f × λ = ${fr} × ${l} = ${f(fr*l,1)} m/s`],1]}],
+["Hooke’s law","",()=>{const k=P([20,40,50,100]),e=P([.02,.05,.1,.2]);return rn(0,1)?[`A spring with spring constant ${k} N/m is stretched by ${e} m. Calculate the force applied.`,f(k*e,2),"N",[`F = k × e = ${k} × ${e} = ${f(k*e,2)} N`],2]:[`A spring with spring constant ${k} N/m is stretched by ${e} m. Calculate the energy stored in the spring.`,f(.5*k*e*e,3),"J",[`E = ½ × k × e² = 0.5 × ${k} × ${e}² = ${f(.5*k*e*e,3)} J`],3]}],
+["Specific heat capacity","",()=>{const m=P([.5,1,2,3]),c=P([4200,900,385]),d=P([10,20,25,40]);return[`Calculate the energy needed to heat ${m} kg of a material (specific heat capacity ${c} J/kg °C) by ${d} °C.`,f(m*c*d,0),"J",[`E = m × c × Δθ = ${m} × ${c} × ${d} = ${f(m*c*d,0)} J`],0]}],
+["Half-life","",()=>{const A=P([400,800,1600,2000]),hl=P([2,5,6,10]),n=P([2,3,4]);return[`A source has an activity of ${A} Bq and a half-life of ${hl} hours. What is its activity after ${n*hl} hours?`,A/2**n,"Bq",[`${n*hl} hours ÷ ${hl} = ${n} half-lives`,`Activity halves ${n} times: ${A} ÷ 2^${n} = ${A/2**n} Bq`],0]}],
+["Momentum","H",()=>{const m=P([2,5,60,1000]),v=P([3,5,10,20]);return[`Calculate the momentum of a ${m} kg object moving at ${v} m/s.`,m*v,"kg m/s",[`p = m × v = ${m} × ${v} = ${m*v} kg m/s`],0]}],
+["Pressure","T",()=>{const F=P([50,120,300,600]),A=P([.05,.1,.25,.5,2]);return[`A force of ${F} N acts on an area of ${A} m². Calculate the pressure.`,f(F/A,1),"Pa",[`Pressure = force ÷ area = ${F} ÷ ${A} = ${f(F/A,1)} Pa`],1]}],
+["Moments","T",()=>{const F=P([10,20,50,120]),d=P([.2,.5,1.5,2]);return[`A force of ${F} N acts at a perpendicular distance of ${d} m from a pivot. Calculate the moment.`,f(F*d,1),"N m",[`Moment = force × distance = ${F} × ${d} = ${f(F*d,1)} N m`],1]}],
+["Transformer","T",()=>{const Vp=P([12,25,230]),np=P([100,200,500]),ns=P([50,200,400,1000]);return[`A transformer has ${np} primary turns and ${ns} secondary turns. The primary voltage is ${Vp} V. Calculate the secondary voltage.`,f(Vp*ns/np,1),"V",[`Vs = Vp × ns ÷ np = ${Vp} × ${ns} ÷ ${np} = ${f(Vp*ns/np,1)} V`],1]}]]
+};
+const CC={g:"All",cur:null,done:false,s:0,t:0,k:0,e:"",ans:0,sub:"",course:""};
+function cNew(L){const g=(CC.g!=="All"&&L.find(x=>x[0]===CC.g))||P(L);const[q,a,u,st,d]=g[2]();CC.cur={n:g[0],q:q+(d>0?` Give your answer to ${d} decimal place${d>1?"s":""}.`:""),a,u,st,d};CC.done=false}
+
+function cEval(){
+  if(CC.done||!CC.cur)return;
+  const raw=CC.e.trim();
+  if(!raw){alert("Enter an answer first.");return}
+  let ok=false, given=raw;
+  try{
+    const clean=raw.replace(/,/g,"").replace(/\s+/g,"");
+    const num=Number(clean);
+    if(Number.isFinite(num)){
+      const target=Number(CC.cur.a);
+      const dp=CC.cur.d||0;
+      const tol=dp>0?Math.pow(10,-dp)/2:1e-9;
+      ok=Math.abs(num-target)<=Math.max(tol,1e-9);
+      given=num;
+    }
+  }catch(e){ok=false}
+  CC.t++; if(ok)CC.s++; else CC.k++;
+  CC.done=true; CC.last={ok,given};
+  save(); render();
+}
+function cSkip(){cNew(G[CC.sub]||G.CS);render()}
+function cShowAns(){if(CC.cur){CC.done=true;CC.last={ok:false,given:"—"};render()}}
+
+const CARDS={
+  CS:[...C,...CX.flatMap(g=>g[1]),...CXN.flatMap(g=>g[1])],
+  Biology:[...BIO.flatMap(g=>g[1]),...BIOX.flatMap(g=>g[1])],
+  Chemistry:[...CHEM.flatMap(g=>g[1]),...CHEMX.flatMap(g=>g[1])],
+  Physics:[...PHY.flatMap(g=>g[1]),...PHYX.flatMap(g=>g[1])],
+  Geography:[...GEO.flatMap(g=>g[1])]
+};
+let deck=[],cardI=0,flipped=false,cat="All";
+let quiz=null;
+let calc=null;
+
+function cardsFor(sub){
+  let list=CARDS[sub]||[];
+  if(cat!=="All"){
+    const cats=(sub==="CS"?[...CX,...CXN]:sub==="Biology"?[...BIO,...BIOX]:sub==="Chemistry"?[...CHEM,...CHEMX]:sub==="Physics"?[...PHY,...PHYX]:GEO);
+    const terms=new Set(cats.filter(g=>g[0]===cat).flatMap(g=>g[1].map(c=>c[0])));
+    list=list.filter(c=>terms.has(c[0]));
+  }
+  return list;
+}
+function setSubject(sub){
+  CC.sub=sub;cat="All";cardI=0;flipped=false;quiz=null;calc=null;
+  document.querySelectorAll("#subs .sn").forEach(b=>b.classList.toggle("on",b.dataset.s===sub));
+  buildChips();render();save();
+}
+function buildChips(){
+  const cats=CC.sub==="CS"?[...CX,...CXN]:CC.sub==="Biology"?[...BIO,...BIOX]:CC.sub==="Chemistry"?[...CHEM,...CHEMX]:CC.sub==="Physics"?[...PHY,...PHYX]:GEO;
+  const names=["All",...cats.map(g=>g[0])];
+  $("#chips").innerHTML=names.map(n=>`<button class="chip${n===cat?" on":""}" data-c="${esc(n)}">${esc(n)}</button>`).join("");
+  $("#chips").querySelectorAll(".chip").forEach(b=>b.onclick=()=>{cat=b.dataset.c;cardI=0;flipped=false;render()});
+}
+function render(){
+  const app=$("#app");
+  const tab=document.querySelector(".tab.on").dataset.t;
+  if(tab==="f")renderCards(app);
+  else if(tab==="q")renderQuiz(app);
+  else if(tab==="c")renderCalc(app);
+  else renderProgress(app);
+}
+function renderCards(app){
+  deck=cardsFor(CC.sub);
+  if(!deck.length){app.innerHTML=`<div class="panel">No cards in this category.</div>`;return}
+  if(cardI>=deck.length)cardI=0;
+  const [term,def]=deck[cardI];
+  app.innerHTML=`
+  <div class="stat"><span>Card ${cardI+1} of ${deck.length}</span><span>${esc(cat)}</span></div>
+  <div class="bar"><i style="width:${((cardI+1)/deck.length*100).toFixed(1)}%"></i></div>
+  <div class="card3d${flipped?" fl":""}" id="card" title="Tap to flip">
+    <div class="face front"><small>Term</small><div class="t">${esc(term)}</div><div class="hint">Tap to reveal</div></div>
+    <div class="face back"><small>Definition</small><div class="d">${esc(def)}</div></div>
+  </div>
+  <div class="row">
+    <button class="btn" id="prev">← Previous</button>
+    <button class="btn p" id="flip">${flipped?"Show term":"Show definition"}</button>
+    <button class="btn" id="next">Next →</button>
+  </div>
+  <div class="row"><button class="btn sm" id="shuf">Shuffle deck</button></div>`;
+  $("#card").onclick=()=>{flipped=!flipped;render()};
+  $("#flip").onclick=()=>{flipped=!flipped;render()};
+  $("#prev").onclick=()=>{cardI=(cardI-1+deck.length)%deck.length;flipped=false;render()};
+  $("#next").onclick=()=>{cardI=(cardI+1)%deck.length;flipped=false;render()};
+  $("#shuf").onclick=()=>{deck=shuf(deck);cardI=0;flipped=false;render()};
+}
+function renderQuiz(app){
+  const qs=QB[CC.sub]||[];
+  if(!quiz||quiz.sub!==CC.sub||quiz.cat!==cat){
+    let pool=qs;
+    if(cat!=="All")pool=qs.filter(q=>q[0]===cat);
+    if(!pool.length){app.innerHTML=`<div class="panel">No quiz questions in this category.</div>`;return}
+    quiz={sub:CC.sub,cat,qs:shuf(pool),i:0,score:0,answered:false,chosen:null};
+  }
+  if(quiz.i>=quiz.qs.length){
+    const pct=Math.round(quiz.score/quiz.qs.length*100);
+    app.innerHTML=`<div class="panel big"><h2>Quiz complete</h2><div class="ring"><span>${pct}%</span></div><p>${quiz.score} out of ${quiz.qs.length} correct</p><div class="row"><button class="btn p" id="rq">Try again</button></div></div>`;
+    $("#rq").onclick=()=>{quiz=null;render()};return;
+  }
+  const q=quiz.qs[quiz.i];
+  const opts=q.slice(2).filter(x=>x!=="H"&&x!=="T");
+  const correct=q[2];
+  const order=shuf(opts.map((o,i)=>i));
+  app.innerHTML=`
+  <div class="stat"><span>Question ${quiz.i+1} of ${quiz.qs.length}</span><span>Score: ${quiz.score}</span></div>
+  <div class="bar"><i style="width:${(quiz.i/quiz.qs.length*100).toFixed(1)}%"></i></div>
+  <div class="q"><b>${esc(q[1])}</b>
+  ${order.map((oi,n)=>`<button class="opt${quiz.answered?(oi===0?" c":(quiz.chosen===oi?" w":"")):""}" data-i="${oi}" ${quiz.answered?"disabled":""}><b>${n+1}.</b> ${esc(opts[oi])}</button>`).join("")}
+  </div>
+  ${quiz.answered?`<div class="row"><button class="btn p" id="nq">Next question →</button></div>`:""}`;
+  if(!quiz.answered){
+    app.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{
+      const i=+b.dataset.i;quiz.chosen=i;quiz.answered=true;
+      if(opts[i]===correct)quiz.score++;
+      render();
+    });
+  }else{
+    $("#nq").onclick=()=>{quiz.i++;quiz.answered=false;quiz.chosen=null;render()};
+  }
+}
+function renderCalc(app){
+  const list=G[CC.sub]||G.CS;
+  if(!calc||calc.sub!==CC.sub||calc.cat!==cat){
+    let pool=list;
+    if(cat!=="All")pool=list.filter(g=>g[0]===cat);
+    if(!pool.length){app.innerHTML=`<div class="panel">No calculations in this category.</div>`;return}
+    const g=P(pool);const[q,a,u,st,d]=g[2]();
+    calc={sub:CC.sub,cat,name:g[0],q,a,u,st,d,done:false,input:""};
+  }
+  const c=calc;
+  app.innerHTML=`
+  <div class="panel">
+    <small>${esc(c.name)}</small>
+    <p>${esc(c.q)}</p>
+    ${c.done?`<p class="${CC.last&&CC.last.ok?"ok-t":"bad-t"}">${CC.last&&CC.last.ok?"Correct!":"Not quite."} Answer: ${esc(String(c.a))}${c.u?" "+esc(c.u):""}</p>
+    <details open><summary>Working</summary><div class="steps">${c.st.map(s=>`<div>${esc(s)}</div>`).join("")}</div></details>
+    <div class="row"><button class="btn p" id="nc">Next calculation</button></div>`
+    :`<input class="inp" id="cin" inputmode="decimal" placeholder="Type your answer${c.u?" in "+esc(c.u):""}" value="${esc(c.input)}">
+      <div class="kp">
+        ${["7","8","9","÷","C","4","5","6","×","←","1","2","3","−","Ans","0",".","(",")","+"].map(k=>`<button class="${k==="Ans"?"eq":""}" data-k="${esc(k)}">${esc(k)}</button>`).join("")}
+      </div>
+      <div class="row"><button class="btn p" id="cek">Check answer</button><button class="btn" id="cskip">Skip</button></div>`}
+  </div>`;
+  if(c.done){$("#nc").onclick=()=>{calc=null;render()};return}
+  const inp=$("#cin");
+  inp.oninput=()=>{c.input=inp.value};
+  app.querySelectorAll(".kp button").forEach(b=>b.onclick=()=>{
+    const k=b.dataset.k;
+    if(k==="C")c.input="";
+    else if(k==="←")c.input=c.input.slice(0,-1);
+    else c.input+=k;
+    inp.value=c.input;inp.focus();
+  });
+  $("#cek").onclick=cEval;
+  $("#cskip").onclick=()=>{calc=null;render()};
+  inp.addEventListener("keydown",e=>{if(e.key==="Enter")cEval()});
+}
+function renderProgress(app){
+  const t=CC.t||0,s=CC.s||0,k=CC.k||0,pct=t?Math.round(s/t*100):0;
+  const total=Object.values(CARDS).reduce((a,b)=>a+b.length,0);
+  app.innerHTML=`
+  <div class="panel big"><h2>Your progress</h2>
+  <div class="ring"><span>${pct}%</span></div>
+  <p>${s} correct from ${t} calculation${t===1?"":"s"}</p>
+  <div class="pr"><div><span>Correct</span><span>${s}</span></div><div class="bar"><i style="width:${pct}%"></i></div></div>
+  <div class="pr"><div><span>Incorrect</span><span>${k}</span></div><div class="bar"><i style="width:${t?(k/t*100):0}%"></i></div></div>
+  </div>
+  <div class="panel"><b>${total} flashcards available</b><p>Use the subject buttons at the top and the category chips to revise.</p></div>
+  <div class="row"><button class="btn" id="reset">Reset progress</button></div>`;
+  $("#reset").onclick=()=>{CC.t=0;CC.s=0;CC.k=0;save();render()};
+}
+function save(){try{localStorage.setItem("revcards",JSON.stringify({t:CC.t,s:CC.s,k:CC.k,sub:CC.sub}))}catch(e){}}
+function load(){try{const d=JSON.parse(localStorage.getItem("revcards")||"{}");CC.t=d.t||0;CC.s=d.s||0;CC.k=d.k||0;if(d.sub&&SUBS.some(x=>x[0]===d.sub))CC.sub=d.sub}catch(e){}}
+
+document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{
+  document.querySelectorAll(".tab").forEach(x=>x.classList.remove("on"));
+  b.classList.add("on");quiz=null;render();
+});
+$("#subs").innerHTML=SUBS.map(([id,label])=>`<button class="sn${id===CC.sub?" on":""}" data-s="${id}"><span>${label.split(" ")[0]}</span><b>${esc(SN[id])}</b></button>`).join("");
+$("#subs").querySelectorAll(".sn").forEach(b=>b.onclick=()=>setSubject(b.dataset.s));
+$("#th").onclick=()=>{
+  const r=document.documentElement;
+  r.dataset.theme=r.dataset.theme==="dark"?"light":"dark";
+};
+buildChips();
+render();
+
+</script>
+</body>
+</html>
