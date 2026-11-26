@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Computer Science Flashcards</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #0f172a;
+    color: #e2e8f0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+  }
+  .app { width: 100%; max-width: 820px; }
+  h1 { text-align: center; font-size: 26px; margin: 10px 0 20px; }
+
+  .tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 14px;
+  }
+  .tabs button {
+    border: none;
+    border-radius: 999px;
+    padding: 9px 14px;
+    font-size: 13px;
+    font-weight: bold;
+    cursor: pointer;
+    background: #1e293b;
+    color: #cbd5e1;
+  }
+  .tabs button.active {
+    background: #2563eb;
+    color: white;
+  }
+
+  .controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 16px;
+  }
+  button {
+    border: none;
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    background: #1e293b;
+    color: #e2e8f0;
+    transition: 0.15s;
+  }
+  button:hover { background: #334155; }
+  button.active { background: #2563eb; color: white; }
+  .know { background: #16a34a !important; color: white !important; }
+  .learning { background: #f59e0b !important; color: #111827 !important; }
+  .danger { background: #dc2626 !important; color: white !important; }
+
+  .progress {
+    text-align: center;
+    font-size: 14px;
+    margin-bottom: 12px;
+    color: #94a3b8;
+  }
+
+  .card {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 18px;
+    min-height: 300px;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    cursor: pointer;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    position: relative;
+  }
+  .topic-label {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    font-size: 11px;
+    color: #94a3b8;
+    background: #0f172a;
+    padding: 5px 10px;
+    border-radius: 999px;
+    border: 1px solid #334155;
+  }
+  .status-badge {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    font-size: 11px;
+    padding: 5px 10px;
+    border-radius: 999px;
+    background: #334155;
+    color: #cbd5e1;
+  }
+  .status-badge.known { background: #16a34a; color: white; }
+  .status-badge.learning { background: #f59e0b; color: #111827; }
+
+  .term { font-size: 30px; font-weight: bold; margin-bottom: 14px; }
+  .definition {
+    font-size: 19px;
+    line-height: 1.5;
+    color: #cbd5e1;
+    display: none;
+  }
+  .card.flipped .term {
+    font-size: 20px;
+    color: #94a3b8;
+    margin-bottom: 16px;
+  }
+  .card.flipped .definition { display: block; }
+
+  .card-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 18px;
+    flex-wrap: wrap;
+  }
+  .nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 18px;
+  }
+  .hint {
+    text-align: center;
+    color: #64748b;
+    font-size: 13px;
+    margin-top: 10px;
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <h1>💻 Computer Science Flashcards</h1>
+
+  <div class="tabs" id="topicTabs"></div>
+
+  <div class="controls">
+    <button class="filter active" data-filter="all">All cards</button>
+    <button class="filter" data-filter="learning">Still learning</button>
+    <button class="filter" data-filter="known">I know this</button>
+    <button id="shuffle">Shuffle</button>
+    <button id="reset" class="danger">Reset progress</button>
+  </div>
+
+  <div class="progress" id="progress"></div>
+
+  <div class="card" id="card">
+    <div class="topic-label" id="topicLabel"></div>
+    <div class="status-badge" id="statusBadge">Not rated</div>
+    <div class="term" id="term"></div>
+    <div class="definition" id="definition"></div>
+  </div>
+
+  <div class="card-actions">
+    <button class="know" id="knowBtn">✅ I know this</button>
+    <button class="learning" id="learningBtn">📖 I am still learning this</button>
+  </div>
+
+  <div class="nav">
+    <button id="prevBtn">← Previous</button>
+    <span id="counter"></span>
+    <button id="nextBtn">Next →</button>
+  </div>
+
+  <p class="hint">Click the card to reveal the definition. Keys: Space = flip, ← → = move, K = know, L = learning.</p>
+</div>
+
+<script>
+const TOPICS = {
+  all: "All topics",
+  algorithms: "🧠 Algorithms",
+  data: "🔢 Data & binary",
+  cpu: "⚙️ CPU & hardware",
+  programming: "💻 Programming",
+  media: "🖼️ Images & sound",
+  networks: "🌐 Networks",
+  security: "🔒 Cyber security",
+  storage: "💾 Storage & databases",
+  software: "🖥️ Software & testing",
+  logic: "🔌 Logic & legal"
+};
+
+const CARDS = {
+algorithms: [
+["Abstraction","Removing unnecessary detail so you can focus on the important features of a problem"],
+["Decomposition","Breaking a complex problem down into smaller sub-problems that are easier to solve"],
+["Algorithm","A step-by-step set of instructions used to solve a problem or complete a task"],
+["Computational thinking","Using abstraction, decomposition and algorithmic thinking to solve problems"],
+["Refining algorithms","Making algorithms more efficient by debugging, increasing reliability and reducing processes taken"],
+["Pseudo code","A structured, language-independent way of writing an algorithm that looks like code but has no strict syntax"],
+["Flowchart","A diagram using standard symbols (terminator, process, decision, input/output) to show the steps of an algorithm"],
+["Syntax error","A mistake that breaks the rules of the programming language, so the code cannot be translated or run"],
+["Logic error","The program runs but gives an incorrect or unexpected result because of a mistake in the logic"],
+["Run-time error","Code cannot handle extreme conditions, e.g. an impossible calculation"],
+["Trace table","A table used to follow the values of variables line by line to test an algorithm and find logic errors"],
+["Linear search","Checks each item in turn from the start until the target is found; the list does not need to be sorted"],
+["Binary search","Compares the target with the middle item of a sorted list and discards the half it cannot be in, repeating until found"],
+["Bubble sort","Adjacent values are swapped if they are in the wrong order"],
+["Merge sort","Data is split into single items, sorted and rejoined (divide and conquer)"],
+["Insertion sort","Takes one value at a time and inserts it into the correct place in a sorted list"]
+],
+
+data: [
+["Bit","A binary digit: a single 1 or 0, the smallest unit of data"],
+["Nibble","4 bits; stores 0 to 15; used for converting to hexadecimal"],
+["Byte","8 bits; one keyboard character is usually 1 byte"],
+["Binary","Base 2; only 1 and 0 (on and off)"],
+["Denary","Decimal; base 10; the number system used by humans"],
+["Hexadecimal","Base 16 (0-9 then A-F); each digit represents a nibble"],
+["Hexadecimal use","Shorter and easier for humans to read and remember than binary"],
+["Modulus","The remainder left after an integer division (MOD)"],
+["Quotient","The whole-number result of an integer division (DIV)"],
+["Left binary shift","Each digit moves left, multiplying by 2"],
+["Right binary shift","Each digit moves right, dividing by 2"],
+["Overflow error","A binary result exceeds the maximum capacity of the allocated storage"],
+["Kilobyte (KB)","1000 bytes (OCR uses 1000, not 1024)"],
+["Megabyte (MB)","1000 kilobytes"],
+["Gigabyte (GB)","1000 megabytes"],
+["Terabyte (TB)","1000 gigabytes"]
+],
+
+cpu: [
+["Register","Small piece of memory inside the processor holding an instruction, data or address"],
+["Cache","Small, very fast memory in the CPU that stores frequently used instructions and data to reduce waiting for RAM"],
+["CPU","Processes data and instructions by repeatedly carrying out the fetch-decode-execute cycle"],
+["Control unit (CU)","Part of the CPU that decodes instructions and coordinates the other components using control signals"],
+["PC (Program counter)","Holds the address of the next instruction"],
+["MAR","Memory Address Register: holds the address of the current instruction or data"],
+["MDR","Memory Data Register: holds data fetched from memory"],
+["ALU","Arithmetic/Logic Unit: performs calculations and logic operations"],
+["ACC (Accumulator)","Stores the results of ALU calculations"],
+["CIR","Current Instruction Register: holds the instruction being processed"],
+["FDE cycle","Fetch, Decode, Execute: repeated billions of times by the CPU"],
+["Address bus","Carries the address of the data to be fetched or stored"],
+["Data bus","Carries data between the CPU and main memory"],
+["Control bus","Carries control signals from the CPU to memory"],
+["CPU performance factors","Cache size, number of cores and clock speed"],
+["Von Neumann architecture","Data and instructions are stored together in main memory and processed in sequence by the CPU"],
+["Clock speed","Number of FDE cycles the CPU can carry out per second, measured in hertz"],
+["Core","A processing unit within the CPU that can run its own instructions; more cores allow more tasks at once"],
+["Embedded system","A computer built into a larger device to do one dedicated function, e.g. a washing machine"]
+],
+
+programming: [
+["Variable","A data location that can change while the program runs"],
+["Constant","A data location that stays the same while the program runs"],
+["Casting","Converting data from one type to another"],
+["Sequencing","Code executed in the order it is written"],
+["Selection","Instructions executed only if a condition is met"],
+["Iteration","Repeating instructions: count controlled or condition controlled"],
+["Count-controlled loop","Iteration that repeats a set number of times (FOR)"],
+["Condition-controlled loop","Iteration that repeats until or while a condition is met (WHILE / DO UNTIL)"],
+["Local variable","Can only be used in the subroutine or structure where it is declared"],
+["Global variable","Can be used anywhere in the program"],
+["Boolean","Data type with only two values: True or False"],
+["Substring","A sequence of characters within a string"],
+["File handler","Variable that stores the external file so the program can work on it"],
+["Cursor","Tracks the current position within a file when reading or writing"],
+["Array","Static data structure storing multiple items of the same type under one name"],
+["Library","Prebuilt, already tested code"],
+["Subroutine","A block of code that performs a task when called"],
+["Procedure","Subroutine that does not return a value"],
+["Function","Subroutine that returns a value to the caller"]
+],
+
+media: [
+["Pixel","A single picture element, a dot of colour in an image"],
+["Colour depth","Number of bits used to represent one pixel"],
+["Resolution","The number of pixels in an image (width × height); more pixels means more detail and a bigger file"],
+["Metadata","Extra data stored with a file describing it, e.g. image width, height and colour depth, or sound sample rate and bit depth"],
+["Sampling","Measuring sound waves at regular intervals to record them digitally"],
+["Sample rate","How many samples are taken per second"],
+["Bit depth","Number of bits used to represent each sound sample"],
+["ASCII","7-bit character set giving 128 characters, mainly English letters, digits and symbols"],
+["Unicode","Character set using 16 or more bits per character so it can represent every language and emoji"]
+],
+
+networks: [
+["LAN","Local Area Network: small geographical area, owned by the organisation"],
+["WAN","Wide Area Network: large area, equipment often owned by telecoms suppliers"],
+["Node","Any device connected to a network"],
+["Switch","Sends data only to the intended device using MAC addresses, reducing collisions and traffic"],
+["Hub","Unintelligent device that sends data to all nodes, causing collisions"],
+["Bandwidth","Amount of data that can be sent in a given time, in bits per second"],
+["Latency","The delay between data being sent and received"],
+["NIC","Network Interface Card: converts node data into signals for the network"],
+["Router","Connects a LAN to the internet and sends data between networks"],
+["Peer to peer network","All computers have the same status; suits small, low-traffic networks"],
+["Client-server network","A server provides services to client machines"],
+["Bus topology","Single cable, data travels both ways, so frequent collisions"],
+["Ring topology","Single cable, data travels one way, no collisions"],
+["Mesh topology","Every node connected to every other; resilient but expensive"],
+["Star topology","Every device connects to a central switch or hub; if one cable fails only that device is affected"],
+["URL","Uniform Resource Locator: the web address of a website"],
+["DNS","Domain Name System: translates a domain name or URL into the IP address of the web server"],
+["ISP","Internet Service Provider: company that provides your internet connection"],
+["IP address","Unique number identifying a device on a network"],
+["MAC address","12-digit hexadecimal address hard coded into a NIC; does not change"],
+["IPv4","32-bit address written as four numbers from 0 to 255 separated by dots"],
+["IPv6","128 bits, eight groups of four hex digits"],
+["Packet switching","Data is split into packets that can take different routes to the destination and are reassembled in order"],
+["Sequence number (packet)","Lets packets be reassembled in order when they arrive at different times"],
+["Checksum","Calculation and answer in a packet used to detect corruption"],
+["TCP","Splits data into packets and reassembles them at the destination"],
+["HTTP","Protocol web browsers use to access web servers"],
+["HTTPS","HTTP with all data encrypted"],
+["FTP","File Transfer Protocol: access files on a server"],
+["POP","Emails are downloaded and removed from the server"],
+["IMAP","Emails are downloaded but kept on the server; usable from many devices"],
+["SMTP","Protocol for sending email between mail servers"],
+["Encryption","Scrambling plain text into cipher text using a key so intercepted data is unreadable"],
+["Copper cable","Twisted copper pairs carrying electrical signals; cheap but prone to interference"],
+["Fibre optic cable","Glass fibres carrying light signals; fastest, no interference, more expensive"],
+["Ethernet","Standard for wired connections in a LAN"],
+["Protocol layering","Splitting network communication into layers (application, transport, internet, link) that each do a specific job"]
+],
+
+security: [
+["Penetration testing","Authorised experts try to hack the system to reveal weaknesses"],
+["Virus","Malware that attaches to a file and copies itself when the file is run"],
+["Worm","Self-replicating malware that spreads across a network without needing a host file or user action"],
+["Trojan","Seemingly innocent program that does harm in the background"],
+["Spyware","Software that secretly records user activity (e.g. key presses) and sends it to a third party"],
+["Ransomware","Locks the computer and demands money to unlock it"],
+["Phishing","Fake emails or messages that trick people into revealing sensitive data, often via a link to a fake site"],
+["Pharming","Changes the IP address in DNS to send you to a fake website"],
+["Rootkit","Tools giving someone else administrator-level access to your computer"],
+["Denial of Service","Floods a web server with requests so it slows or crashes"],
+["SQL injection","Entering SQL into an input to read or change data; prevented by sanitisation"],
+["Firewall","Monitors and filters incoming and outgoing network traffic, blocking anything that breaks its security rules"],
+["Input validation","Checks that entered data meets criteria"],
+["Input sanitisation","Removes unwanted characters from entered data"],
+["Presence check","Makes sure data has been entered"],
+["Range check","Number must fall within a set range"],
+["Length check","Input must contain a certain number of characters"],
+["Social engineering","Manipulating people into giving away confidential information, e.g. phishing, blagging, shouldering"],
+["Shouldering","Watching someone enter their PIN or password over their shoulder"],
+["Blagging","Inventing a scenario to trick someone into handing over information"],
+["Brute force attack","Trying every possible password combination until the correct one is found"],
+["Anti-malware software","Scans for, detects and removes malicious software"]
+],
+
+storage: [
+["Database","Stores data in a logical manner"],
+["Record","A row in a table: all the data about one entity"],
+["Field","A column in a table: one piece of information about an entity"],
+["SQL","Structured Query Language: creates, updates, deletes and queries databases"],
+["Primary storage","Directly accessed by the CPU (e.g. RAM, ROM, cache); smaller and faster"],
+["Secondary storage","Not directly accessed by the CPU; non-volatile, larger capacity, used for long-term storage"],
+["RAM","Volatile memory holding the programs, data and OS currently in use"],
+["ROM","Non-volatile memory that holds the bootstrap (start-up) instructions"],
+["Virtual memory","Part of secondary storage used as extra RAM when RAM is full; slower than RAM"],
+["Magnetic storage","Stores data by switching the polarity of areas (hard disk, tape)"],
+["Optical storage","Pits burnt into a reflective disc and read by a laser (CD, DVD, Blu-ray)"],
+["Solid state storage","Circuitry traps electrons to store data (SSD, SD card)"],
+["NAS","Network Attached Storage: a server providing storage space to nodes"],
+["Cost per GB","The way to fairly compare the cost of storage"]
+],
+
+software: [
+["Black box testing","Tests only inputs and outputs, not how the code works"],
+["White box testing","Tests the algorithms and internal logic"],
+["Alpha testing","Programmers act as users to test after black/white box testing"],
+["Beta testing","Wider release to real users under realistic conditions"],
+["Iterative testing","Testing repeatedly during development as each part is built"],
+["Final (terminal) testing","Testing the complete program at the end of development"],
+["Operating system","Manages hardware and software resources and provides a user interface"],
+["Kernel","Heart of the OS: handles the lowest-level hardware operations"],
+["Driver","Software that lets the OS communicate with hardware"],
+["WIMP","Windows, Icons, Menus, Pointers"],
+["Utility software","System software that maintains, secures and optimises the computer"],
+["Defragmentation","Puts a file's data into contiguous sectors; only for hard drives"],
+["Lossy compression","Reduces file size by permanently removing data that cannot be restored (e.g. JPEG, MP3)"],
+["Lossless compression","Reduces file size without losing any data; the original can be rebuilt exactly"],
+["Full backup","A copy of all data on the system"],
+["Incremental backup","Only saves files that changed since the last backup"],
+["Compiler","Translates all the source code into machine code in one go, producing an executable file; errors reported afterwards"],
+["Interpreter","Translates and executes source code one line at a time; stops at the first error"],
+["Assembly language","Low-level language using mnemonics for sets of binary code"],
+["High level language","Close to English; easier to read and write"]
+],
+
+logic: [
+["Logic gate","Building block of CPU circuitry performing a logical operation"],
+["Truth table","Shows all possible inputs to a gate and the results"],
+["AND gate","Output is 1 only if both inputs are 1"],
+["OR gate","Output is 1 if at least one input is 1"],
+["NOT gate","Output is the opposite of the input"],
+["Stakeholder","A person or group affected by an issue"],
+["Data Protection Act 2018","Data must be fair, lawful, accurate, secure and kept no longer than needed"],
+["Computer Misuse Act 1990","Illegal to gain unauthorised access, modify data or supply malware"],
+["Copyright, Designs and Patents Act 1988","Illegal to copy or share others' intellectual property"],
+["Open source licence","Free, with editable code, but often less support and testing"],
+["Proprietary licence","Paid, closed source, usually well supported and tested"],
+["Cloud storage","Data stored on a remote server and accessed through the internet"],
+["Digital divide","The gap between people who have access to technology and those who do not"],
+["Environmental impact of technology","Energy use, e-waste and the extraction of rare materials"]
+]
+};
+
+const STORAGE_KEY = "cs-flashcards-progress-v2";
+
+let progress = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+let currentTopic = "all";
+let currentFilter = "all";
+let deck = [];
+let index = 0;
+
+const topicTabs = document.getElementById("topicTabs");
+const card = document.getElementById("card");
+const topicLabel = document.getElementById("topicLabel");
+const termEl = document.getElementById("term");
+const definitionEl = document.getElementById("definition");
+const statusBadge = document.getElementById("statusBadge");
+const progressEl = document.getElementById("progress");
+const counterEl = document.getElementById("counter");
+
+function allCards() {
+  return Object.entries(CARDS).flatMap(([topic, cards]) =>
+    cards.map(([term, definition]) => ({ topic, term, definition }))
+  );
+}
+
+function saveProgress() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+}
+
+function getDeck() {
+  let cards = currentTopic === "all" ? allCards() : allCards().filter(c => c.topic === currentTopic);
+
+  if (currentFilter !== "all") {
+    cards = cards.filter(c => progress[c.term] === currentFilter);
+  }
+
+  return cards;
+}
+
+function updateProgress() {
+  const cards = currentTopic === "all" ? allCards() : allCards().filter(c => c.topic === currentTopic);
+  const known = cards.filter(c => progress[c.term] === "known").length;
+  const learning = cards.filter(c => progress[c.term] === "learning").length;
+  const unrated = cards.length - known - learning;
+
+  progressEl.textContent =
+    `✅ Known: ${known} • 📖 Still learning: ${learning} • ❔ Not rated: ${unrated} • Total: ${cards.length}`;
+}
+
+function render() {
+  deck = getDeck();
+
+  if (index >= deck.length) index = 0;
+  if (index < 0) index = deck.length - 1;
+
+  if (deck.length === 0) {
+    topicLabel.textContent = TOPICS[currentTopic];
+    termEl.textContent = "No cards here";
+    definitionEl.textContent =
+      currentFilter === "known"
+        ? "You have not marked any cards in this topic as known yet."
+        : "You have not marked any cards in this topic as still learning yet.";
+    statusBadge.textContent = "—";
+    statusBadge.className = "status-badge";
+    counterEl.textContent = "0 / 0";
+    updateProgress();
+    return;
+  }
+
+  const current = deck[index];
+  topicLabel.textContent = TOPICS[current.topic];
+  termEl.textContent = current.term;
+  definitionEl.textContent = current.definition;
+  card.classList.remove("flipped");
+
+  const status = progress[current.term] || "unrated";
+  statusBadge.className = "status-badge";
+
+  if (status === "known") {
+    statusBadge.textContent = "✅ Known";
+    statusBadge.classList.add("known");
+  } else if (status === "learning") {
+    statusBadge.textContent = "📖 Still learning";
+    statusBadge.classList.add("learning");
+  } else {
+    statusBadge.textContent = "❔ Not rated";
+  }
+
+  counterEl.textContent = `${index + 1} / ${deck.length}`;
+  updateProgress();
+}
+
+function nextCard() {
+  if (!deck.length) return;
+  index = (index + 1) % deck.length;
+  render();
+}
+
+function previousCard() {
+  if (!deck.length) return;
+  index = (index - 1 + deck.length) % deck.length;
+  render();
+}
+
+function setStatus(status) {
+  if (!deck.length) return;
+  progress[deck[index].term] = status;
+  saveProgress();
+  render();
+}
+
+function shuffleDeck() {
+  for (let i = deck.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [deck[i], deck[j]] = [deck[j], deck[i]];
+  }
+  index = 0;
+  render();
+}
+
+function createTopicTabs() {
+  topicTabs.innerHTML = "";
+
+  Object.entries(TOPICS).forEach(([key, label]) => {
+    const button = document.createElement("button");
+    button.textContent = label;
+    button.dataset.topic = key;
+
+    if (key === currentTopic) button.classList.add("active");
+
+    button.addEventListener("click", () => {
+      currentTopic = key;
+      index = 0;
+
+      document.querySelectorAll("#topicTabs button").forEach(b => b.classList.remove("active"));
+      button.classList.add("active");
+
+      render();
+    });
+
+    topicTabs.appendChild(button);
+  });
+}
+
+document.getElementById("knowBtn").addEventListener("click", () => setStatus("known"));
+document.getElementById("learningBtn").addEventListener("click", () => setStatus("learning"));
+document.getElementById("nextBtn").addEventListener("click", nextCard);
+document.getElementById("prevBtn").addEventListener("click", previousCard);
+document.getElementById("shuffle").addEventListener("click", shuffleDeck);
+
+card.addEventListener("click", () => card.classList.toggle("flipped"));
+
+document.querySelectorAll(".filter").forEach(button => {
+  button.addEventListener("click", () => {
+    document.querySelectorAll(".filter").forEach(b => b.classList.remove("active"));
+    button.classList.add("active");
+    currentFilter = button.dataset.filter;
+    index = 0;
+    render();
+  });
+});
+
+document.getElementById("reset").addEventListener("click", () => {
+  if (confirm("Reset all flashcard progress?")) {
+    progress = {};
+    saveProgress();
+    index = 0;
+    render();
+  }
+});
+
+document.addEventListener("keydown", event => {
+  if (event.key === "ArrowRight") nextCard();
+  if (event.key === "ArrowLeft") previousCard();
+  if (event.key === " ") {
+    event.preventDefault();
+    card.classList.toggle("flipped");
+  }
+  if (event.key.toLowerCase() === "k") setStatus("known");
+  if (event.key.toLowerCase() === "l") setStatus("learning");
+});
+
+createTopicTabs();
+render();
+</script>
+
+</body>
+</html>
